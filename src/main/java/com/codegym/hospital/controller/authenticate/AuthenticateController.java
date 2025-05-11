@@ -23,6 +23,10 @@ public class AuthenticateController {
     public String showLoginForm(Model model) {
         model.addAttribute("user", new User());
         return "authenticate/login";
+    }@GetMapping("/otp")
+    public String showLoginOTPForm(Model model) {
+        model.addAttribute("user", new User());
+        return "authenticate/otp";
     }
     @PostMapping("/login")
     public String processLoginForm(@ModelAttribute("user") User user, Model model) {

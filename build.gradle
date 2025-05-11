@@ -42,8 +42,11 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
 
-    // build.gradle
-    implementation 'ch.qos.logback:logback-classic:1.4.14'
+
+    implementation 'com.twilio.sdk:twilio:9.15.0'
+
+    implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+
 
 
 }
