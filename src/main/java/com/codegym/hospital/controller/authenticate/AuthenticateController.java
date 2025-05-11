@@ -48,21 +48,12 @@ public class AuthenticateController {
          model.addAttribute("error","Số điện thoại đã tồn tại");
          return "authenticate/register";
         }else{
-            switch (user.getRole().getName().toLowerCase()) {
-                case "patient" :
-                    user.setStatus("active");
-                    model.addAttribute("messageLogin","Đăng ký thành công");
-                    break;
-                case "doctor":
-                case "receptionist" :
-                    model.addAttribute("messageLogin","Đăng ký thành công. Chờ duyệt!");
-                    user.setStatus("pending");
-                    break;
-                default:
-                    model.addAttribute("error","Vai trò không hợp lệ");
-                    return "authenticate/register";
-            }
-            userService.registerUser(user);
+            String message = userService.registerUser(user);
+            if(message == null){
+                model.addAttribute("error","Vai trò không hợp lệ!");
+                return "authenticate/register";
+            };
+            model.addAttribute("messageLogin", message);
             return "authenticate/login";
         }
     }

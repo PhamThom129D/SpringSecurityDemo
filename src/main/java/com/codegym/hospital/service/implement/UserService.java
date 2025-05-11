@@ -20,12 +20,27 @@ public class UserService implements IUserService {
     @Autowired
     private BCryptPasswordEncoder passEncoder;
     @Override
-    public User registerUser(User user) {
+    public String registerUser(User user) {
         user.setPassword(passEncoder.encode(user.getPassword()));
         Role role = roleRepository.findByName(user.getRole().getName());
         user.setRole(role);
-
-        return userRepository.save(user);
+        String message;
+        switch (role.getName()){
+            case "PATIENT":
+                user.setStatus("active");
+                message = "Đăng ký thành công. Vui lòng đăng nhập lại!";
+                break;
+            case "DOCTOR" :
+                case "RECEPTIONIST":
+                    user.setStatus("pending");
+                    message = "Đăng ký thành công. Chờ duyệt!";
+                    break;
+            default:
+                user.setStatus("inactive");
+                return null;
+        }
+        userRepository.save(user);
+        return message;
     }
     @Override
     public User loginUser(User user) {
