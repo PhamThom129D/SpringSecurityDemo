@@ -1,61 +1,57 @@
 package com.codegym.hospital.service.implement;
 
+import com.codegym.hospital.model.OtpVerification;
+import com.codegym.hospital.model.User;
+import com.codegym.hospital.repository.IOtpVerificationRepository;
+import com.codegym.hospital.service.IOtpService;
+import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
-public class EmailOtpService {
+public class OtpService implements IOtpService {
 
-    private final JavaMailSender mailSender;
-    private final Map<String, String> otpStore = new ConcurrentHashMap<>();
-    private final Map<String, Long> otpExpiry = new ConcurrentHashMap<>();
-    private final long OTP_VALID_DURATION = 5 * 60 * 1000; // 5 phút
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public EmailOtpService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    @Autowired
+    private IOtpVerificationRepository otpRepository;
 
-    public boolean isValidEmail(String email) {
-        return email != null && email.matches("^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$");
-    }
-
-    public void sendOtpToEmail(String email) {
-        String otp = generateOtp();
-        otpStore.put(email, otp);
-        otpExpiry.put(email, System.currentTimeMillis() + OTP_VALID_DURATION);
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Mã OTP đăng nhập của bạn");
-        message.setText("Mã OTP của bạn là: " + otp + "\nHiệu lực trong 5 phút.");
-        mailSender.send(message);
-    }
-
-    public boolean verifyOtp(String email, String code) {
-        if (!otpStore.containsKey(email)) return false;
-
-        String storedOtp = otpStore.get(email);
-        long expiryTime = otpExpiry.getOrDefault(email, 0L);
-
-        if (System.currentTimeMillis() > expiryTime) {
-            otpStore.remove(email);
-            otpExpiry.remove(email);
-            return false;
-        }
-
-        if (storedOtp.equals(code)) {
-            otpStore.remove(email);
-            otpExpiry.remove(email);
-            return true;
-        }
-
-        return false;
-    }
-
-    private String generateOtp() {
+    @Override
+    public String generateOtp() {
         Random random = new Random();
-        return String.format("%06d", random.nextInt(999999));
+        int otp = 100000 + random.nextInt(900000);
+        return String.valueOf(otp);
+    }
+
+    @Override
+    public OtpVerification createOtpForUser(User user) {
+        String otpCode = generateOtp();
+        OtpVerification otp = new OtpVerification();
+        otp.setUser(user);
+        otp.setOtpCode(otpCode);
+        otp.setCreatedAt(LocalDateTime.now());
+        otp.setExpiresAt(LocalDateTime.now().plusMinutes(5));
+        otp.setVerified(false);
+
+        return otpRepository.save(otp);
+    }
+
+    @Override
+    public OtpVerification verifyLatestOtpForUser(User user) {
+        OtpVerification latestOtp = otpRepository.findTopByUserAndIsVerifiedFalseOrderByCreatedAtDesc(user);
+
+        if (latestOtp != null && latestOtp.getExpiresAt().isAfter(LocalDateTime.now())) {
+            latestOtp.setVerified(true);
+            otpRepository.save(latestOtp);
+            return latestOtp;
+        }
+
+        return null;
     }
 }

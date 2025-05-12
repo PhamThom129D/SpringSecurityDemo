@@ -140,7 +140,7 @@
     sendOtpBtn.addEventListener('click', () => {
         const email = emailInput.value.trim();
         if (!email) {
-            showError('Vui lòng nhập số điện thoại!');
+            showError('Vui lòng nhập email!');
             emailInput.focus();
             return;
         }
@@ -151,7 +151,7 @@
             body: new URLSearchParams({ email: email })
         }).then(res => {
             if (res.ok) {
-                showSuccess('Mã OTP đã được gửi đến số điện thoại!');
+                showSuccess('Mã OTP đã được gửi đến email của bạn!');
                 otpSection.classList.remove('hidden');
                 countdownSection.classList.remove('hidden');
                 loginBtn.classList.remove('hidden');
@@ -168,7 +168,7 @@
     resendBtn.addEventListener('click', () => {
         const email = emailInput.value.trim();
         if (!email) {
-            showError('Vui lòng nhập số điện thoại!');
+            showError('Vui lòng nhập email!');
             emailInput.focus();
             return;
         }

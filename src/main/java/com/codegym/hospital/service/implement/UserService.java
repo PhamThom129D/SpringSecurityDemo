@@ -44,10 +44,19 @@ public class UserService implements IUserService {
     }
     @Override
     public User loginUser(User user) {
-        User userFromDb = isPhoneNumberExist(user.getPhonenumber());
+        User userFromDb = null;
+
+        if (user.getPhonenumber() != null && !user.getPhonenumber().isEmpty()) {
+            userFromDb = isPhoneNumberExist(user.getPhonenumber());
+        }
+        if (userFromDb == null && user.getEmail() != null && !user.getEmail().isEmpty()) {
+            userFromDb = isEmailExist(user.getEmail());
+        }
+
         if (userFromDb != null && passEncoder.matches(user.getPassword(), userFromDb.getPassword())) {
             return userFromDb;
         }
+
         return null;
     }
 
@@ -55,4 +64,13 @@ public class UserService implements IUserService {
     public User isPhoneNumberExist(String phoneNumber) {
         return userRepository.findByPhonenumber(phoneNumber);
     }
+
+    @Override
+    public User isEmailExist(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
+
+
 }

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
@@ -31,23 +30,56 @@
     <!-- FORM ĐĂNG NHẬP -->
     <form th:action="@{/authenticate/login}" th:object="${user}" method="post"
           aria-label="Login Form"
-          class="md:w-1/2 flex flex-col justify-center px-6 md:px-12">
-        <h2 class="text-black font-bold text-3xl mb-6 text-center text-center">
+          class="md:w-1/2 flex flex-col justify-center px-6 md:px-12" id="loginForm">
+        <h2 class="text-black font-bold text-3xl mb-6 text-center">
             ĐĂNG NHẬP
         </h2>
 
-        <div class="relative mb-4">
+        <!-- Chọn phương thức đăng nhập -->
+        <div class="mb-6 flex justify-center gap-6">
+            <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" name="loginMethod" value="phone" checked class="form-radio text-blue-600" />
+                <span class="ml-2 text-sm font-medium">Số điện thoại</span>
+            </label>
+            <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" name="loginMethod" value="email" class="form-radio text-blue-600" />
+                <span class="ml-2 text-sm font-medium">Email</span>
+            </label>
+        </div>
+
+        <!-- Số điện thoại với chọn quốc gia -->
+        <div id="phoneGroup" class="relative mb-4 flex gap-2 items-center">
+            <select id="countryCode" name="countryCode" class="border border-black rounded py-1 px-2 text-sm outline-none w-24">
+                <option value="+84" selected>+84 (VN)</option>
+                <option value="+1">+1 (US)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+86">+86 (CN)</option>
+                <option value="+81">+81 (JP)</option>
+                <option value="+49">+49 (DE)</option>
+                <!-- Thêm các quốc gia khác nếu cần -->
+            </select>
             <input th:field="*{phonenumber}"
+                   id="phoneInput"
                    class="border border-black outline-none text-sm py-1 px-3 w-full pr-8 rounded"
-                   placeholder="Số điện thoại" required type="tel"/>
+                   placeholder="Số điện thoại" type="tel" autocomplete="username"/>
             <i aria-hidden="true"
                class="fas fa-phone absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs"></i>
+        </div>
+
+        <!-- Email input -->
+        <div id="emailGroup" class="relative mb-4 hidden">
+            <input th:field="*{email}"
+                   id="emailInput"
+                   class="border border-black outline-none text-sm py-1 px-3 w-full pr-8 rounded"
+                   placeholder="Email" type="email" autocomplete="username"/>
+            <i aria-hidden="true"
+               class="fas fa-envelope absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs"></i>
         </div>
 
         <div class="relative mb-2">
             <input th:field="*{password}"
                    class="border border-black outline-none text-sm py-1 px-3 w-full pr-8 rounded"
-                   placeholder="Mật khẩu" required type="password"/>
+                   placeholder="Mật khẩu" required type="password" autocomplete="current-password"/>
             <i aria-hidden="true"
                class="fas fa-lock absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs"></i>
         </div>
@@ -59,7 +91,7 @@
 
         <p th:text="${error}" class="text-red-600 mb-3"></p>
 
-        <button class="bg-black text-white text-sm py-2 px-6 w-full flex items-center justify-center gap-2 rounded mb-4"
+        <button id="submitBtn" class="bg-black text-white text-sm py-2 px-6 w-full flex items-center justify-center gap-2 rounded mb-4"
                 type="submit">
             Đăng nhập
             <i class="fas fa-arrow-right"></i>
@@ -67,7 +99,7 @@
 
         <button class="bg-white border border-black text-black text-sm py-2 px-6 w-full flex items-center justify-center gap-2 rounded mb-6"
                 th:onclick="'window.location.href=\'/authenticate/otp\''" type="button">
-        Đăng nhập bằng OTP
+            Đăng nhập bằng OTP
             <i class="fas fa-mobile-alt"></i>
         </button>
         <div class="text-center text-sm">
@@ -77,17 +109,58 @@
         </div>
     </form>
 </div>
-<script th:if="${messageLogin != null}" th:inline="javascript">
-    Swal.fire({
-        toast: true,
-        position: 'top',
-        icon: 'success',
-        title: [[${messageLogin}]],
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true,
-        customClass: {
-            popup: 'text-sm rounded-lg px-3 py-2'
+
+<script>
+    const phoneGroup = document.getElementById('phoneGroup');
+    const emailGroup = document.getElementById('emailGroup');
+    const phoneInput = document.getElementById('phoneInput');
+    const emailInput = document.getElementById('emailInput');
+    const loginForm = document.getElementById('loginForm');
+
+    // Chuyển đổi hiển thị theo phương thức đăng nhập
+    document.querySelectorAll('input[name="loginMethod"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.value === 'phone' && radio.checked) {
+                phoneGroup.classList.remove('hidden');
+                emailGroup.classList.add('hidden');
+                phoneInput.setAttribute('required', 'required');
+                emailInput.removeAttribute('required');
+                emailInput.value = '';
+            } else if (radio.value === 'email' && radio.checked) {
+                emailGroup.classList.remove('hidden');
+                phoneGroup.classList.add('hidden');
+                emailInput.setAttribute('required', 'required');
+                phoneInput.removeAttribute('required');
+                phoneInput.value = '';
+            }
+        });
+    });
+
+    // Optional: Validate form before submit
+    loginForm.addEventListener('submit', (e) => {
+        const selectedMethod = document.querySelector('input[name="loginMethod"]:checked').value;
+        if (selectedMethod === 'phone' && !phoneInput.value.trim()) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Vui lòng nhập số điện thoại!',
+                timer: 1500,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top'
+            });
+            phoneInput.focus();
+        } else if (selectedMethod === 'email' && !emailInput.value.trim()) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Vui lòng nhập email!',
+                timer: 1500,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top'
+            });
+            emailInput.focus();
         }
     });
 </script>
