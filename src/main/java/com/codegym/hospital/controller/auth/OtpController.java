@@ -88,7 +88,7 @@ public class OtpController {
 
     @GetMapping("/home")
     public String home() {
-        return "home";
+        return "admin/home";
     }
 
 }

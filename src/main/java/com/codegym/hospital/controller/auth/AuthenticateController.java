@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/authenticate")
 public class AuthenticateController {
@@ -32,7 +34,7 @@ public class AuthenticateController {
         User loggedInUser = userService.loginUser(user);
         if (loggedInUser != null) {
             model.addAttribute("user", loggedInUser);
-            return "home";
+            return "admin/home";
         }else {
             model.addAttribute("error", "Số điện thoại hoặc mật khẩu không đúng");
             return "authenticate/login";
@@ -68,6 +70,12 @@ public class AuthenticateController {
 
         model.addAttribute("messageLogin", message);
         return "authenticate/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session, Model model) {
+        session.invalidate();
+        return "redirect:/authenticate/login";
     }
 
 }

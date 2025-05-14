@@ -58,3 +58,24 @@ document.addEventListener("keydown", (e) => {
         closeDropdowns();
     }
 });
+
+
+
+const logoutBtn = document.querySelector('#profileDropdown a[href="#"]:last-child');
+logoutBtn.addEventListener('click', function(event) {
+    event.preventDefault();
+    Swal.fire({
+        title: 'Xác nhận đăng xuất',
+        text: "Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Đăng xuất',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/authenticate/logout';
+        }
+    });
+});
