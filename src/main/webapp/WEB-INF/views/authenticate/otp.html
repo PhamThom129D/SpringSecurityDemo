@@ -79,6 +79,7 @@
         </div>
     </form>
 </div>
+<script th:src="@{/js/alert.js}"></script>
 <script>
     const sendOtpBtn = document.getElementById('sendOtpBtn');
     const resendBtn = document.getElementById('resendBtn');
@@ -111,27 +112,7 @@
         timerInterval = setInterval(updateCountdown, 1000);
     }
 
-    function showError(msg) {
-        Swal.fire({
-            icon: 'error',
-            title: msg,
-            timer: 8500,
-            showConfirmButton: false,
-            toast: true,
-            position: 'top'
-        });
-    }
 
-    function showSuccess(msg) {
-        Swal.fire({
-            icon: 'success',
-            title: msg,
-            timer: 1500,
-            showConfirmButton: false,
-            toast: true,
-            position: 'top'
-        });
-    }
 
     sendOtpBtn.addEventListener('click', () => {
         const email = emailInput.value.trim();

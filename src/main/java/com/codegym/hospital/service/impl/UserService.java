@@ -6,8 +6,13 @@ import com.codegym.hospital.repository.user.IRoleRepository;
 import com.codegym.hospital.repository.user.IUserRepository;
 import com.codegym.hospital.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService implements IUserService {
@@ -68,5 +73,15 @@ public class UserService implements IUserService {
     @Override
     public User isEmailExist(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> getUserByStatus(String status) {
+        return userRepository.findByStatus(status);
+    }
+
+    @Override
+    public Page<User> findPendingUsers(String keyword, Pageable pageable) {
+        return userRepository.findPendingUsers(keyword,pageable);
     }
 }

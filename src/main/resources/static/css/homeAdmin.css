@@ -1,7 +1,7 @@
 
     /* Sidebar link styles */
 .sidebar-link {
-    @apply flex items-center gap-4 text-gray-800 font-semibold px-3 py-2 rounded-md hover:bg-blue-100 transition-colors duration-300;
+    @apply flex items-center gap-3 text-gray-800 font-semibold px-3 py-2 rounded-md hover:bg-blue-100 transition-colors duration-300;
 }
 
 .sidebar-icon {
@@ -42,10 +42,15 @@ body {
     display: flex;
     flex-direction: column;
 }
+    #mainContent {
+        overflow: hidden; /* Allows vertical scrolling in the main content */
+        height: calc(100vh - 60px); /* Adjust height based on header */
+    }
+
 
 /* Sidebar animation */
 .sidebar-link {
-    @apply flex items-center gap-4 p-4 rounded-lg text-black font-semibold cursor-pointer transition-all duration-300 ease-in-out;
+    @apply flex items-center gap-3 p-4 rounded-lg text-black font-semibold cursor-pointer transition-all duration-300 ease-in-out;
     transform-origin: left center;
 }
 
@@ -92,7 +97,7 @@ main {
     max-width: none;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
     gap: 1.5rem;
 }
 
@@ -219,14 +224,14 @@ footer {
 
 .dropdown {
     position: relative;
-    display: inline-block; /* Đảm bảo phần tử chứa không chiếm toàn bộ chiều ngang */
-    z-index: 40; /* thấp hơn dropdown-menu nhưng cao hơn nội dung thường */
+    display: inline-block;
+    z-index: 40;
 }
 
 .dropdown-menu {
     position: absolute;
-    top: 150%; /* ngay bên dưới button */
-    left: -10px;
+    top: 150%;
+    left: -50px;
     background: white;
     border-radius: 0.5rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
