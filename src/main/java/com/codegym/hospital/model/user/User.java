@@ -1,4 +1,4 @@
-package com.codegym.hospital.model;
+package com.codegym.hospital.model.user;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

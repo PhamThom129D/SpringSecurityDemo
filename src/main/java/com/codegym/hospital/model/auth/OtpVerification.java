@@ -1,4 +1,6 @@
-package com.codegym.hospital.model;
+package com.codegym.hospital.model.auth;
+
+import com.codegym.hospital.model.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

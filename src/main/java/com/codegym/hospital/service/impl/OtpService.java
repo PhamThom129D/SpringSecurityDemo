@@ -1,10 +1,9 @@
-package com.codegym.hospital.service.implement;
+package com.codegym.hospital.service.impl;
 
-import com.codegym.hospital.model.OtpVerification;
-import com.codegym.hospital.model.User;
-import com.codegym.hospital.repository.IOtpVerificationRepository;
+import com.codegym.hospital.model.auth.OtpVerification;
+import com.codegym.hospital.model.user.User;
+import com.codegym.hospital.repository.user.IOtpVerificationRepository;
 import com.codegym.hospital.service.IOtpService;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,7 @@ public class OtpService implements IOtpService {
     @Override
     public String generateOtp() {
         Random random = new Random();
-        int otp = 100000 + random.nextInt(900000);
+        int otp = 100000 + random.nextInt(999999);
         return String.valueOf(otp);
     }
 
@@ -36,22 +35,30 @@ public class OtpService implements IOtpService {
         otp.setUser(user);
         otp.setOtpCode(otpCode);
         otp.setCreatedAt(LocalDateTime.now());
-        otp.setExpiresAt(LocalDateTime.now().plusMinutes(5));
+        otp.setExpiresAt(LocalDateTime.now().plusMinutes(3));
         otp.setVerified(false);
 
         return otpRepository.save(otp);
     }
 
     @Override
-    public OtpVerification verifyLatestOtpForUser(User user) {
+    public boolean verifyLatestOtpForUser(User user, String otpCode) {
         OtpVerification latestOtp = otpRepository.findTopByUserAndIsVerifiedFalseOrderByCreatedAtDesc(user);
-
-        if (latestOtp != null && latestOtp.getExpiresAt().isAfter(LocalDateTime.now())) {
-            latestOtp.setVerified(true);
-            otpRepository.save(latestOtp);
-            return latestOtp;
+        if (latestOtp == null) {
+            return false;
         }
 
-        return null;
+        if (latestOtp.getOtpCode().equals(otpCode) && latestOtp.getExpiresAt().isAfter(LocalDateTime.now())) {
+            latestOtp.setVerified(true);
+            otpRepository.save(latestOtp);
+            return true;
+        }
+
+        return false;
     }
+
+    public OtpVerification getLatestOtpByUser(User user) {
+        return otpRepository.findTopByUserOrderByCreatedAtDesc(user);
+    }
+
 }
