@@ -19,12 +19,8 @@
         <img alt="Exterior view of a modern hospital building with clear blue sky"
              class="object-cover w-full h-full"
              height="500"
-             src="https://storage.googleapis.com/a1aa/image/f625da54-0c5b-4945-ad3e-dfa294600676.jpg"
+             src="/images/model_login.png"
              width="400"/>
-        <div class="absolute bottom-8 left-8 text-white text-[22px] italic font-semibold select-none"
-             style="text-shadow: 0 0 5px rgba(0,0,0,0.5)">
-            #Collection 2018
-        </div>
     </div>
 
     <!-- FORM ĐĂNG NHẬP -->
@@ -49,15 +45,6 @@
 
         <!-- Số điện thoại với chọn quốc gia -->
         <div id="phoneGroup" class="relative mb-4 flex gap-2 items-center">
-            <select id="countryCode" name="countryCode" class="border border-black rounded py-1 px-2 text-sm outline-none w-24">
-                <option value="+84" selected>+84 (VN)</option>
-                <option value="+1">+1 (US)</option>
-                <option value="+44">+44 (UK)</option>
-                <option value="+86">+86 (CN)</option>
-                <option value="+81">+81 (JP)</option>
-                <option value="+49">+49 (DE)</option>
-                <!-- Thêm các quốc gia khác nếu cần -->
-            </select>
             <input th:field="*{phonenumber}"
                    id="phoneInput"
                    class="border border-black outline-none text-sm py-1 px-3 w-full pr-8 rounded"

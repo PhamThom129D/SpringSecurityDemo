@@ -21,10 +21,6 @@
              height="500"
              src="https://storage.googleapis.com/a1aa/image/f625da54-0c5b-4945-ad3e-dfa294600676.jpg"
              width="400"/>
-        <div class="absolute bottom-8 left-8 text-white text-[22px] italic font-semibold select-none"
-             style="text-shadow: 0 0 5px rgba(0,0,0,0.5)">
-            #Collection 2018
-        </div>
     </div>
 
     <!-- FORM ĐĂNG NHẬP BẰNG OTP -->
@@ -60,7 +56,7 @@
         <div class="mb-4 flex items-center justify-between text-sm hidden" id="countdownSection">
             <div>
                 <span>Thời gian còn lại: </span>
-                <span id="countdown" class="font-semibold text-red-600">05:00</span>
+                <span id="countdown" class="font-semibold text-red-600">03:00</span>
             </div>
             <button id="resendBtn" type="button" disabled
                     class="text-blue-600 hover:underline cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed">
@@ -93,7 +89,7 @@
     const loginBtn = document.getElementById('loginBtn');
     const otpInput = document.getElementById('otpInput');
 
-    let timeLeft = 300;
+    let timeLeft = 180;
     let timerInterval = null;
 
     function updateCountdown() {
@@ -109,7 +105,7 @@
     }
 
     function startCountdown() {
-        timeLeft = 300;
+        timeLeft = 180;
         resendBtn.disabled = true;
         updateCountdown();
         timerInterval = setInterval(updateCountdown, 1000);
@@ -147,7 +143,7 @@
 
         fetch('/api/otp/send', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8"' },
             body: new URLSearchParams({ email: email })
         }).then(res => {
             if (res.ok) {
@@ -175,7 +171,7 @@
 
         fetch('/api/otp/send', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8"' },
             body: new URLSearchParams({ email: email })
         }).then(res => {
             if (res.ok) {
@@ -202,7 +198,7 @@
 
         fetch('/api/otp/verify', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8"' },
             body: new URLSearchParams({ email: email, code: otp })
         }).then(res => {
             if (res.ok) {
@@ -217,7 +213,7 @@
                     window.location.href = '/api/otp/home';
                 });
             } else {
-                res.text().then(text => showError('Mã OTP không đúng!'));
+                res.text().then(text => showError(text));
             }
         }).catch(() => {
             showError('Không thể kết nối đến máy chủ!');

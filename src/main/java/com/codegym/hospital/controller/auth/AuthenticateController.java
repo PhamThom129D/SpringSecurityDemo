@@ -1,9 +1,8 @@
-package com.codegym.hospital.controller.authenticate;
+package com.codegym.hospital.controller.auth;
 
 
-import com.codegym.hospital.model.User;
+import com.codegym.hospital.model.user.User;
 import com.codegym.hospital.service.IUserService;
-import com.codegym.hospital.service.implement.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/authenticate")
@@ -33,7 +34,7 @@ public class AuthenticateController {
         User loggedInUser = userService.loginUser(user);
         if (loggedInUser != null) {
             model.addAttribute("user", loggedInUser);
-            return "home";
+            return "admin/home";
         }else {
             model.addAttribute("error", "Số điện thoại hoặc mật khẩu không đúng");
             return "authenticate/login";
@@ -48,17 +49,33 @@ public class AuthenticateController {
 
     @PostMapping("/register")
     public String processRegisterForm(@ModelAttribute("user") User user, Model model) {
-        if(userService.isPhoneNumberExist(user.getPhonenumber()) != null){
-         model.addAttribute("error","Số điện thoại đã tồn tại");
-         return "authenticate/register";
-        }else{
-            String message = userService.registerUser(user);
-            if(message == null){
-                model.addAttribute("error","Vai trò không hợp lệ!");
-                return "authenticate/register";
-            };
-            model.addAttribute("messageLogin", message);
-            return "authenticate/login";
+        String phone = user.getPhonenumber();
+        String email = user.getEmail();
+
+        if (userService.isPhoneNumberExist(phone) != null) {
+            model.addAttribute("errorPhone", "Số điện thoại đã tồn tại");
+            return "authenticate/register";
         }
+
+        if (userService.isEmailExist(email) != null) {
+            model.addAttribute("errorEmail", "Email đã tồn tại");
+            return "authenticate/register";
+        }
+
+        String message = userService.registerUser(user);
+        if (message == null) {
+            model.addAttribute("error", "Vai trò không hợp lệ!");
+            return "authenticate/register";
+        }
+
+        model.addAttribute("messageLogin", message);
+        return "authenticate/login";
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session, Model model) {
+        session.invalidate();
+        return "redirect:/authenticate/login";
+    }
+
 }
