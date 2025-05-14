@@ -56,7 +56,7 @@
         <div class="mb-4 flex items-center justify-between text-sm hidden" id="countdownSection">
             <div>
                 <span>Thời gian còn lại: </span>
-                <span id="countdown" class="font-semibold text-red-600">05:00</span>
+                <span id="countdown" class="font-semibold text-red-600">03:00</span>
             </div>
             <button id="resendBtn" type="button" disabled
                     class="text-blue-600 hover:underline cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed">
@@ -89,7 +89,7 @@
     const loginBtn = document.getElementById('loginBtn');
     const otpInput = document.getElementById('otpInput');
 
-    let timeLeft = 300;
+    let timeLeft = 180;
     let timerInterval = null;
 
     function updateCountdown() {
@@ -105,7 +105,7 @@
     }
 
     function startCountdown() {
-        timeLeft = 300;
+        timeLeft = 180;
         resendBtn.disabled = true;
         updateCountdown();
         timerInterval = setInterval(updateCountdown, 1000);
@@ -143,7 +143,7 @@
 
         fetch('/api/otp/send', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8"' },
             body: new URLSearchParams({ email: email })
         }).then(res => {
             if (res.ok) {
@@ -171,7 +171,7 @@
 
         fetch('/api/otp/send', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8"' },
             body: new URLSearchParams({ email: email })
         }).then(res => {
             if (res.ok) {
@@ -198,7 +198,7 @@
 
         fetch('/api/otp/verify', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8"' },
             body: new URLSearchParams({ email: email, code: otp })
         }).then(res => {
             if (res.ok) {

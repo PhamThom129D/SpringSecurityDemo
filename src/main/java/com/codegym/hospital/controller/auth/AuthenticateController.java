@@ -1,9 +1,8 @@
-package com.codegym.hospital.controller.authenticate;
+package com.codegym.hospital.controller.auth;
 
 
-import com.codegym.hospital.model.User;
+import com.codegym.hospital.model.user.User;
 import com.codegym.hospital.service.IUserService;
-import com.codegym.hospital.service.implement.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

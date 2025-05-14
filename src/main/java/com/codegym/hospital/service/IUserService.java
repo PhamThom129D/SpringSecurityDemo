@@ -1,6 +1,6 @@
 package com.codegym.hospital.service;
 
-import com.codegym.hospital.model.User;
+import com.codegym.hospital.model.user.User;
 
 public interface IUserService {
     String registerUser(User user);

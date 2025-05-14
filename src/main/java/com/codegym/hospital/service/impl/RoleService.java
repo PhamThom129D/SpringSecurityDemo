@@ -1,6 +1,6 @@
-package com.codegym.hospital.service.implement;
+package com.codegym.hospital.service.impl;
 
-import com.codegym.hospital.model.Role;
+import com.codegym.hospital.model.user.Role;
 import com.codegym.hospital.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

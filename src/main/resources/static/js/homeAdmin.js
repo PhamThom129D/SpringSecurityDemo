@@ -1,57 +1,60 @@
-const sidebar = document.getElementById('sidebar');
-const mainContent = document.getElementById('mainContent');
-const menuToggle = document.getElementById('menuToggle');
+// Toggle sidebar on mobile
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const mainContent = document.getElementById("mainContent");
 
-menuToggle.addEventListener('click', () => {
-    if (sidebar.classList.contains('-translate-x-full')) {
-        sidebar.classList.remove('-translate-x-full');
-        mainContent.classList.remove('ml-0');
-        mainContent.classList.add('ml-64');
+menuToggle.addEventListener("click", () => {
+    if (sidebar.classList.contains("-translate-x-full")) {
+        sidebar.classList.remove("-translate-x-full");
+        mainContent.classList.remove("ml-0");
+        mainContent.classList.add("ml-64");
     } else {
-        sidebar.classList.add('-translate-x-full');
-        mainContent.classList.remove('ml-64');
-        mainContent.classList.add('ml-0');
+        sidebar.classList.add("-translate-x-full");
+        mainContent.classList.remove("ml-64");
+        mainContent.classList.add("ml-0");
     }
 });
 
-function handleResize() {
-    if (window.innerWidth < 765) {
-        sidebar.classList.add('-translate-x-full');
-        mainContent.classList.remove('ml-64');
-        mainContent.classList.add('ml-0');
-    } else {
-        sidebar.classList.remove('-translate-x-full');
-        mainContent.classList.remove('ml-0');
-        mainContent.classList.add('ml-64');
-    }
+// Dropdown toggles
+const notificationBtn = document.getElementById("notificationBtn");
+const notificationDropdown = document.getElementById("notificationDropdown");
+const profileBtn = document.getElementById("profileBtn");
+const profileDropdown = document.getElementById("profileDropdown");
+
+// Close all dropdowns
+function closeDropdowns() {
+    notificationDropdown.classList.remove("show");
+    profileDropdown.classList.remove("show");
 }
 
-window.addEventListener('resize', handleResize);
-window.addEventListener('load', handleResize);
-
-document.addEventListener("DOMContentLoaded", function () {
-    const notificationBtn = document.getElementById("notificationBtn");
-    const notificationDropdown = document.getElementById("notificationDropdown");
-    const profileBtn = document.getElementById('profileBtn');
-    const profileDropdown = document.getElementById('profileDropdown');
-    notificationBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        notificationDropdown.classList.toggle("show");
-        profileDropdown.classList.remove("show");
-    });
-    profileBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        profileDropdown.classList.toggle("show");
+notificationBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (!notificationDropdown.classList.contains("show")) {
+        closeDropdowns();
+        notificationDropdown.classList.add("show");
+    } else {
         notificationDropdown.classList.remove("show");
-    });
-    // Ẩn dropdown khi click ra ngoài
-    document.addEventListener("click", function (e) {
-        if (!notificationDropdown.contains(e.target) && !notificationBtn.contains(e.target)) {
-            notificationDropdown.classList.remove("show");
-        }
-        if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
-            profileDropdown.classList.remove("show");
-        }
-    });
-})
+    }
+});
 
+profileBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (!profileDropdown.classList.contains("show")) {
+        closeDropdowns();
+        profileDropdown.classList.add("show");
+    } else {
+        profileDropdown.classList.remove("show");
+    }
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener("click", () => {
+    closeDropdowns();
+});
+
+// Accessibility: close dropdowns on Escape key
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        closeDropdowns();
+    }
+});

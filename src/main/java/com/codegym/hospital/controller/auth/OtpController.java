@@ -1,9 +1,9 @@
-package com.codegym.hospital.controller.authenticate;
+package com.codegym.hospital.controller.auth;
 
-import com.codegym.hospital.model.OtpVerification;
-import com.codegym.hospital.model.User;
-import com.codegym.hospital.repository.IUserRepository;
-import com.codegym.hospital.service.implement.OtpService;
+import com.codegym.hospital.model.auth.OtpVerification;
+import com.codegym.hospital.model.user.User;
+import com.codegym.hospital.repository.user.IUserRepository;
+import com.codegym.hospital.service.impl.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping("/api/otp")
-public class EmailOtpController {
+@RequestMapping(value = "/api/otp" ,produces = "text/plain;charset=UTF-8")
+public class OtpController {
 
     @Autowired
     private IUserRepository userRepository;
@@ -34,8 +35,14 @@ public class EmailOtpController {
         if (userOpt == null) {
             return ResponseEntity.badRequest().body("Email chưa đăng ký tài khoản!");
         }
-        OtpVerification otp = otpService.createOtpForUser(userOpt);
 
+        OtpVerification lastOtp = otpService.getLatestOtpByUser(userOpt);
+        if (lastOtp != null && lastOtp.getCreatedAt().isAfter(LocalDateTime.now().minusMinutes(3))) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body("Vui lòng đợi 3 phút để gửi lại OTP.");
+        }
+
+        OtpVerification otp = otpService.createOtpForUser(userOpt);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(userOpt.getEmail());
         message.setSubject("[HospitalCare] Xác thực đăng nhập - Mã OTP của bạn");

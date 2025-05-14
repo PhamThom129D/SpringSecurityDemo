@@ -1,9 +1,9 @@
-package com.codegym.hospital.service.implement;
+package com.codegym.hospital.service.impl;
 
-import com.codegym.hospital.model.Role;
-import com.codegym.hospital.model.User;
-import com.codegym.hospital.repository.IRoleRepository;
-import com.codegym.hospital.repository.IUserRepository;
+import com.codegym.hospital.model.user.Role;
+import com.codegym.hospital.model.user.User;
+import com.codegym.hospital.repository.user.IRoleRepository;
+import com.codegym.hospital.repository.user.IUserRepository;
 import com.codegym.hospital.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

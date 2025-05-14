@@ -2,148 +2,199 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
-    <title>
-        Trang Chủ Admin
-    </title>
-    <script src="https://cdn.tailwindcss.com">
-    </script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/homeAdmin.css}">
+    <title>Trang Chủ Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+            rel="stylesheet"/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap"
+            rel="stylesheet"
+    />
+    <link th:href="@{/css/homeAdmin.css}" rel="stylesheet">
 </head>
-<body class="bg-[#e6f0f6] min-h-screen flex">
+<body class="bg-[#e6f0f6] min-h-screen flex font-['Roboto']">
 <!-- Sidebar -->
-<aside class="sidebar fixed top-0 left-0 h-full w-64 bg-[#d9e9f8] p-6 overflow-y-auto shadow-lg z-20 transition-transform duration-300 ease-in-out"
-       id="sidebar">
-    <div class="sidebar-logo">
-        <img alt="Logo" th:src="@{/images/logo.png}"/>
+<aside
+        class="sidebar fixed top-0 left-0 h-full w-64 bg-[#d9e9f8] p-6 overflow-y-auto shadow-lg z-20 transition-transform duration-300 ease-in-out"
+        id="sidebar"
+>
+    <div class="sidebar-logo mb-8">
+        <img
+                alt="Logo bệnh viện màu xanh dương với biểu tượng chữ thập y tế hiện đại"
+                height="50"
+                th:src="@{/images/logo.png}" th:alt="Logo"
+                width="150"
+        />
     </div>
-    <nav class="flex flex-col space-y-3">
+    <nav class="flex flex-col space-y-10">
         <a class="sidebar-link" href="#" title="Quản lý bệnh nhân">
-            <i class="fas fa-user-injured sidebar-icon text-blue-600">
-            </i>
-            Quản lý bệnh nhân
+            <i class="fas fa-user-injured sidebar-icon text-blue-600"></i> Quản lý bệnh nhân
         </a>
         <a class="sidebar-link" href="#" title="Hồ sơ bệnh án">
-            <i class="fas fa-file-medical-alt sidebar-icon text-green-600">
-            </i>
-            Hồ sơ bệnh án
+            <i class="fas fa-file-medical-alt sidebar-icon text-green-600"></i> Hồ sơ bệnh án
         </a>
         <a class="sidebar-link" href="#" title="Quản lý nhân viên">
-            <i class="fas fa-users-cog sidebar-icon text-purple-600">
-            </i>
-            Quản lý nhân viên
+            <i class="fas fa-users-cog sidebar-icon text-purple-600"></i> Quản lý nhân viên
         </a>
         <a class="sidebar-link" href="#" title="Quản lý bác sĩ">
-            <i class="fas fa-user-md sidebar-icon text-red-600">
-            </i>
-            Quản lý bác sĩ
+            <i class="fas fa-user-md sidebar-icon text-red-600"></i> Quản lý bác sĩ
         </a>
         <a class="sidebar-link" href="#" title="Quản lý phòng khám">
-            <i class="fas fa-clinic-medical sidebar-icon text-yellow-600">
-            </i>
-            Quản lý phòng khám
+            <i class="fas fa-clinic-medical sidebar-icon text-yellow-600"></i> Quản lý phòng khám
         </a>
         <a class="sidebar-link" href="#" title="Quản lý khoa khám">
-            <i class="fas fa-hospital-symbol sidebar-icon text-indigo-600">
-            </i>
-            Quản lý khoa khám
+            <i class="fas fa-hospital-symbol sidebar-icon text-indigo-600"></i> Quản lý khoa khám
         </a>
         <a class="sidebar-link" href="#" title="Thống kê doanh số">
-            <i class="fas fa-chart-line sidebar-icon text-pink-600">
-            </i>
-            Thống kê doanh số
+            <i class="fas fa-chart-line sidebar-icon text-pink-600"></i> Thống kê doanh số
         </a>
         <a class="sidebar-link" href="#" title="Cấu hình trang web">
-            <i class="fas fa-cogs sidebar-icon text-gray-700">
-            </i>
-            Cấu hình trang web
+            <i class="fas fa-cogs sidebar-icon text-gray-700"></i> Cấu hình trang web
         </a>
         <a class="sidebar-link" href="#" title="Bản đồ bệnh viện">
-            <i class="fas fa-map-marked-alt sidebar-icon text-teal-600">
-            </i>
-            Bản đồ bệnh viện
+            <i class="fas fa-map-marked-alt sidebar-icon text-teal-600"></i> Bản đồ bệnh viện
         </a>
     </nav>
 </aside>
 <!-- Main content -->
-<div class="flex-1 ml-64 flex flex-col min-h-screen transition-margin duration-300 ease-in-out" id="mainContent">
-    <header class="bg-[#d9e9f8] p-6 shadow-md flex items-center justify-between relative z-30">
-        <button aria-label="Toggle menu" class="text-black text-2xl focus:outline-none md:hidden" id="menuToggle">
-            <i class="fas fa-bars">
-            </i>
+<div
+        class="flex-1 ml-64 flex flex-col min-h-screen transition-margin duration-300 ease-in-out"
+        id="mainContent"
+>
+    <header
+            class="bg-[#d9e9f8] p-6 shadow-md flex items-center justify-between relative z-30"
+    >
+        <button
+                aria-label="Toggle menu"
+                class="text-black text-2xl focus:outline-none md:hidden"
+                id="menuToggle"
+        >
+            <i class="fas fa-bars"></i>
         </button>
-        <h2 class="text-xl font-bold text-black hidden md:block">
-            Quản lý hệ thống
-        </h2>
-        <nav class="flex items-center space-x-6">
+        <h2 class="text-xl font-bold text-black hidden md:block">Quản lý hệ thống</h2>
+        <nav class="flex items-center space-x-6 relative flex-nowrap">
             <!-- Notifications -->
-            <div class="relative">
-                <button aria-label="Thông báo"
+            <div class="relative dropdown">
+                <button
+                        aria-label="Thông báo"
                         class="relative text-black hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-2"
-                        id="notificationBtn">
-                    <i class="fas fa-bell fa-lg">
-                    </i>
-                    <span class="notification-badge" id="notificationCount">
-        5
-       </span>
+                        id="notificationBtn"
+                >
+                    <i class="fas fa-bell fa-lg"></i>
+                    <span class="notification-badge" id="notificationCount">5</span>
                 </button>
-                <div class="dropdown-menu hidden w-72 max-h-80 overflow-y-auto shadow-lg rounded-lg mt-2 bg-white"
-                     id="notificationDropdown">
-                    <div class="p-4 border-b border-gray-200 font-semibold text-gray-700">
+                <div
+                        class="dropdown-menu"
+                        id="notificationDropdown"
+                        role="menu"
+                        aria-labelledby="notificationBtn"
+                >
+                    <div
+                            class="p-4 border-b border-gray-200 font-semibold text-gray-700 select-none"
+                    >
                         Thông báo mới
                     </div>
                     <ul>
-                        <li class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-800 text-sm">
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
                             Bệnh nhân A đã đặt lịch khám
                         </li>
-                        <li class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-800 text-sm">
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
+                            Bệnh nhân A đã đặt lịch khám
+                        </li>
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
+                            Bệnh nhân A đã đặt lịch khám
+                        </li>
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
+                            Bệnh nhân A đã đặt lịch khám
+                        </li>
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
+                            Bệnh nhân A đã đặt lịch khám
+                        </li>
+
+
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
                             Bác sĩ B đã cập nhật hồ sơ
                         </li>
-                        <li class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-800 text-sm">
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
                             Phòng khám C đã được đặt trước
                         </li>
-                        <li class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-800 text-sm">
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
                             Báo cáo doanh số tháng 6 đã sẵn sàng
                         </li>
-                        <li class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-800 text-sm">
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
                             Cập nhật phần mềm hệ thống
                         </li>
                     </ul>
+                    <a href="#" class="view-all" role="button" tabindex="0">Xem tất cả thông báo</a>
                 </div>
             </div>
             <!-- Xem trang bác sĩ -->
-            <a class="text-black font-semibold hover:text-blue-700 transition-colors duration-300 flex items-center gap-2"
-               href="#">
-                <i class="fas fa-user-md">
-                </i>
-                <span class="hidden sm:inline">
-       Xem trang bác sĩ
-      </span>
+            <a
+                    class="text-black font-semibold hover:text-blue-700 transition-colors duration-300 flex items-center gap-2 whitespace-nowrap"
+                    href="#"
+            >
+                <i class="fas fa-user-md"></i>
+                <span class="hidden sm:inline">Xem trang bác sĩ</span>
             </a>
             <!-- Thông tin cá nhân Dropdown -->
             <div class="dropdown relative">
-                <button aria-label="Thông tin cá nhân"
+                <button
+                        aria-label="Thông tin cá nhân"
                         class="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1"
-                        id="profileBtn">
-                    <img alt="Ảnh đại diện người dùng"
-                         class="w-10 h-10 rounded-full object-cover border-2 border-blue-600" height="40"
-                         src="https://storage.googleapis.com/a1aa/image/05e50824-3e5d-4ffa-5bb2-3be77f31496c.jpg"
-                         width="40"/>
-                    <span class="hidden md:inline font-semibold text-black">
-        Nguyễn Văn A
-       </span>
-                    <i class="fas fa-chevron-down text-gray-600">
-                    </i>
+                        id="profileBtn"
+                >
+                    <img
+                            alt="Ảnh đại diện người dùng nam trung niên mặc áo blouse trắng, tóc đen ngắn, cười tươi"
+                            class="w-10 h-10 rounded-full object-cover border-2 border-blue-600"
+                            height="40"
+                            src="https://storage.googleapis.com/a1aa/image/05e50824-3e5d-4ffa-5bb2-3be77f31496c.jpg"
+                            width="40"
+                    />
+                    <span class="hidden md:inline font-semibold text-black">Nguyễn Văn A</span>
+                    <i class="fas fa-chevron-down text-gray-600"></i>
                 </button>
-                <div class="dropdown-menu hidden right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2"
-                     id="profileDropdown">
-                    <a class="block px-4 py-2 hover:bg-blue-50 text-gray-800 font-medium" href="#">
-                        Thông tin cá nhân
-                    </a>
-                    <a class="block px-4 py-2 hover:bg-blue-50 text-gray-800 font-medium" href="#">
-                        Đăng xuất
-                    </a>
+                <div
+                        class="dropdown-menu"
+                        id="profileDropdown"
+                        role="menu"
+                        aria-labelledby="profileBtn"
+                >
+                    <a class="block px-4 py-2 hover:bg-blue-50 text-gray-800 font-medium" href="#" role="menuitem"
+                       tabindex="0"
+                    >Thông tin cá nhân</a
+                    >
+                    <a class="block px-4 py-2 hover:bg-blue-50 text-gray-800 font-medium" href="#" role="menuitem"
+                       tabindex="0"
+                    >Đăng xuất</a
+                    >
                 </div>
             </div>
         </nav>
@@ -151,67 +202,40 @@
     <main class="flex-grow p-6 w-full">
         <div class="grid-container">
             <a class="card" href="#">
-                <i class="fas fa-user-injured card-icon text-blue-600">
-                </i>
-                <span class="card-title">
-       Quản lý bệnh nhân
-      </span>
+                <i class="fas fa-user-injured card-icon text-blue-600"></i>
+                <span class="card-title">Quản lý bệnh nhân</span>
             </a>
             <a class="card" href="#">
-                <i class="fas fa-file-medical-alt card-icon text-green-600">
-                </i>
-                <span class="card-title">
-       Hồ sơ bệnh án
-      </span>
+                <i class="fas fa-file-medical-alt card-icon text-green-600"></i>
+                <span class="card-title">Hồ sơ bệnh án</span>
             </a>
             <a class="card" href="#">
-                <i class="fas fa-users-cog card-icon text-purple-600">
-                </i>
-                <span class="card-title">
-       Quản lý nhân viên
-      </span>
+                <i class="fas fa-users-cog card-icon text-purple-600"></i>
+                <span class="card-title">Quản lý nhân viên</span>
             </a>
             <a class="card" href="#">
-                <i class="fas fa-user-md card-icon text-red-600">
-                </i>
-                <span class="card-title">
-       Quản lý bác sĩ
-      </span>
+                <i class="fas fa-user-md card-icon text-red-600"></i>
+                <span class="card-title">Quản lý bác sĩ</span>
             </a>
             <a class="card" href="#">
-                <i class="fas fa-clinic-medical card-icon text-yellow-600">
-                </i>
-                <span class="card-title">
-       Quản lý phòng khám
-      </span>
+                <i class="fas fa-clinic-medical card-icon text-yellow-600"></i>
+                <span class="card-title">Quản lý phòng khám</span>
             </a>
             <a class="card" href="#">
-                <i class="fas fa-hospital-symbol card-icon text-indigo-600">
-                </i>
-                <span class="card-title">
-       Quản lý khoa khám
-      </span>
+                <i class="fas fa-hospital-symbol card-icon text-indigo-600"></i>
+                <span class="card-title">Quản lý khoa khám</span>
             </a>
             <a class="card" href="#">
-                <i class="fas fa-chart-line card-icon text-pink-600">
-                </i>
-                <span class="card-title">
-       Thống kê doanh số
-      </span>
+                <i class="fas fa-chart-line card-icon text-pink-600"></i>
+                <span class="card-title">Thống kê doanh số</span>
             </a>
             <a class="card" href="#">
-                <i class="fas fa-cogs card-icon text-gray-700">
-                </i>
-                <span class="card-title">
-       Cấu hình trang web
-      </span>
+                <i class="fas fa-cogs card-icon text-gray-700"></i>
+                <span class="card-title">Cấu hình trang web</span>
             </a>
             <a class="card" href="#">
-                <i class="fas fa-map-marked-alt card-icon text-teal-600">
-                </i>
-                <span class="card-title">
-       Bản đồ bệnh viện
-      </span>
+                <i class="fas fa-map-marked-alt card-icon text-teal-600"></i>
+                <span class="card-title">Bản đồ bệnh viện</span>
             </a>
         </div>
     </main>
@@ -219,9 +243,7 @@
         <div class="container mx-auto">
             <p class="text-sm md:text-base">
                 © 2024 Bệnh viện – Bản quyền thuộc về
-                <span class="text-blue-800">
-       NgocThom
-      </span>
+                <span class="text-blue-800">NgocThom</span>
             </p>
         </div>
     </footer>
