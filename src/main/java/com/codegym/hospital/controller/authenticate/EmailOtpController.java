@@ -5,13 +5,14 @@ import com.codegym.hospital.model.User;
 import com.codegym.hospital.repository.IUserRepository;
 import com.codegym.hospital.service.implement.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/otp")
@@ -26,74 +27,61 @@ public class EmailOtpController {
     @Autowired
     private JavaMailSender mailSender;
 
-    // Hiển thị form HTML (email + OTP)
-    @GetMapping("/email")
-    public String showEmailOtpForm() {
-        return "auth/email_form";
-    }
-
     @PostMapping("/send")
     @ResponseBody
-    public String sendOtp(@RequestParam("email") String email, HttpSession session) {
+    public ResponseEntity<String> sendOtp(@RequestParam("email") String email, HttpSession session) {
         User userOpt = userRepository.findByEmail(email);
         if (userOpt == null) {
-            return errorResponse("Email không tồn tại.");
+            return ResponseEntity.badRequest().body("Email chưa đăng ký tài khoản!");
         }
-
         OtpVerification otp = otpService.createOtpForUser(userOpt);
 
-        // Gửi email chứa mã OTP
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(userOpt.getEmail());
-        message.setSubject("Mã OTP đăng nhập");
-        message.setText("Mã OTP của bạn là: " + otp.getOtpCode());
+        message.setSubject("[HospitalCare] Xác thực đăng nhập - Mã OTP của bạn");
+
+        String emailBody = "Chào bạn " + userOpt.getFullname() + ", \n\n"
+                + "Bạn hoặc ai đó đã yêu cầu đăng nhập vào hệ thống của chúng tôi.\n"
+                + "Mã OTP của bạn là: " + otp.getOtpCode() + "\n\n"
+                + "Vui lòng nhập mã này để hoàn tất quá trình đăng nhập. Mã OTP có hiệu lực trong vòng 5 phút.\n\n"
+                + "Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này hoặc liên hệ với chúng tôi để được hỗ trợ.\n\n"
+                + "Trân trọng,\n"
+                + "Đội ngũ hỗ trợ";
+
+        message.setText(emailBody);
         mailSender.send(message);
 
-        // Lưu userId vào session (để verify OTP)
         session.setAttribute("otpUserId", userOpt.getId());
-        return "OK";
+        return ResponseEntity.ok("OK");
     }
 
-    // Xử lý Verify OTP (AJAX POST tới /api/otp/verify)
+
     @PostMapping("/verify")
     @ResponseBody
-    public String verifyOtp(@RequestParam("email") String email,
-                            @RequestParam("code") String otpCode,
-                            HttpSession session) {
-        Integer userId = (Integer) session.getAttribute("otpUserId");
-        if (userId == null) {
-            return errorResponse("Vui lòng gửi mã OTP trước.");
-        }
-        User userOpt = userRepository.findByEmail(email);
-        if (userOpt == null) {
-            return errorResponse("Không tìm thấy người dùng.");
-        }
-        OtpVerification verifiedOtp = otpService.verifyLatestOtpForUser(userOpt);
-        if (verifiedOtp == null) {
-            System.out.println("OTP không hợp lệ hoặc hết hạn.");
-        } else {
-            System.out.println("OTP hợp lệ? " + verifiedOtp.isVerified());
+    public ResponseEntity<String> verifyOtp(@RequestParam String email,
+                                            @RequestParam String code,
+                                            HttpSession session) {
+        if (session.getAttribute("otpUserId") == null) {
+            return ResponseEntity.badRequest().body("Vui lòng gửi mã OTP trước.");
         }
 
-        if (verifiedOtp != null && verifiedOtp.isVerified()) {
-            session.setAttribute("loggedInUser", userOpt);
-            System.out.println(111111);
-            return "OK";
-        } else {
-            return errorResponse("Mã OTP không đúng hoặc đã hết hạn.");
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Không tìm thấy người dùng.");
         }
 
+        if (otpService.verifyLatestOtpForUser(user, code)) {
+            session.setAttribute("loggedInUser", user);
+            return ResponseEntity.ok("OK");
+        }
+
+        return ResponseEntity.badRequest().body("Mã OTP không đúng hoặc đã hết hạn.");
     }
 
-    // Trang sau khi login thành công
+
     @GetMapping("/home")
     public String home() {
-        return "home"; // ví dụ trả về trang home.html
+        return "home";
     }
 
-    @ResponseBody
-    @ResponseStatus(code = org.springframework.http.HttpStatus.BAD_REQUEST)
-    private String errorResponse(String message) {
-        return message;
-    }
 }

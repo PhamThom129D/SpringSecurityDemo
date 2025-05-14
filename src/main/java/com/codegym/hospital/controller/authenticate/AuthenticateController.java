@@ -48,17 +48,27 @@ public class AuthenticateController {
 
     @PostMapping("/register")
     public String processRegisterForm(@ModelAttribute("user") User user, Model model) {
-        if(userService.isPhoneNumberExist(user.getPhonenumber()) != null){
-         model.addAttribute("error","Số điện thoại đã tồn tại");
-         return "authenticate/register";
-        }else{
-            String message = userService.registerUser(user);
-            if(message == null){
-                model.addAttribute("error","Vai trò không hợp lệ!");
-                return "authenticate/register";
-            };
-            model.addAttribute("messageLogin", message);
-            return "authenticate/login";
+        String phone = user.getPhonenumber();
+        String email = user.getEmail();
+
+        if (userService.isPhoneNumberExist(phone) != null) {
+            model.addAttribute("errorPhone", "Số điện thoại đã tồn tại");
+            return "authenticate/register";
         }
+
+        if (userService.isEmailExist(email) != null) {
+            model.addAttribute("errorEmail", "Email đã tồn tại");
+            return "authenticate/register";
+        }
+
+        String message = userService.registerUser(user);
+        if (message == null) {
+            model.addAttribute("error", "Vai trò không hợp lệ!");
+            return "authenticate/register";
+        }
+
+        model.addAttribute("messageLogin", message);
+        return "authenticate/login";
     }
+
 }

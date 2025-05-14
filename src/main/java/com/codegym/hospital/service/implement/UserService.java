@@ -61,7 +61,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User isPhoneNumberExist(String phoneNumber) {
+    public User isPhoneNumberExist(String phoneNumber)  {
         return userRepository.findByPhonenumber(phoneNumber);
     }
 
@@ -69,8 +69,4 @@ public class UserService implements IUserService {
     public User isEmailExist(String email) {
         return userRepository.findByEmail(email);
     }
-
-
-
-
 }

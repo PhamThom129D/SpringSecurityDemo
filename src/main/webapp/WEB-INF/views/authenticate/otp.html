@@ -21,10 +21,6 @@
              height="500"
              src="https://storage.googleapis.com/a1aa/image/f625da54-0c5b-4945-ad3e-dfa294600676.jpg"
              width="400"/>
-        <div class="absolute bottom-8 left-8 text-white text-[22px] italic font-semibold select-none"
-             style="text-shadow: 0 0 5px rgba(0,0,0,0.5)">
-            #Collection 2018
-        </div>
     </div>
 
     <!-- FORM ĐĂNG NHẬP BẰNG OTP -->
@@ -217,7 +213,7 @@
                     window.location.href = '/api/otp/home';
                 });
             } else {
-                res.text().then(text => showError('Mã OTP không đúng!'));
+                res.text().then(text => showError(text));
             }
         }).catch(() => {
             showError('Không thể kết nối đến máy chủ!');
