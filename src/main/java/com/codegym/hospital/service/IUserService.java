@@ -1,10 +1,10 @@
 package com.codegym.hospital.service;
 
 import com.codegym.hospital.model.user.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
     String registerUser(User user);
@@ -12,5 +12,6 @@ public interface IUserService {
     User isPhoneNumberExist(String phoneNumber);
     User isEmailExist(String email);
     List<User> getUserByStatus(String status);
-    Page<User> findPendingUsers(String keyword, Pageable pageable);
+    void saveUser(User user);
+    Optional<User> getUserById(Long id);
 }

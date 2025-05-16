@@ -1,5 +1,5 @@
-function showError(msg) {
-    Swal.fire({
+window.showError = function(msg) {
+    return Swal.fire({
         icon: 'error',
         title: msg,
         timer: 1500,
@@ -9,8 +9,8 @@ function showError(msg) {
     });
 }
 
-function showSuccess(msg) {
-    Swal.fire({
+window.showSuccess = function(msg) {
+    return Swal.fire({
         icon: 'success',
         title: msg,
         timer: 1500,
@@ -19,3 +19,51 @@ function showSuccess(msg) {
         position: 'top'
     });
 }
+
+
+window.showConfirmation = function(title, text) {
+    return Swal.fire({
+        title: title,
+        text: text,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: "Không",
+        confirmButtonText: "Có"
+    }).then(result => {
+        return result.isConfirmed || false;
+    });
+}
+
+
+window.handleAction = function(path, msg) {
+    fetch(path, {
+        method: 'POST'
+    }).then(response => {
+        console.log(response);
+        if (response.ok) {
+            window.showSuccess(msg).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire('Có lỗi xảy ra', '', 'error');
+        }
+    }).catch(() => {
+        Swal.fire('Không thể kết nối đến máy chủ!', '', 'error');
+    });
+}
+
+
+
+window.confirmAndHandle = async function(title, text, path, msg) {
+    try {
+        const confirmed = await window.showConfirmation(title, text);
+        if (confirmed) {
+            window.handleAction(path, msg);
+        }
+    } catch (error) {
+        Swal.fire('Có lỗi xảy ra khi xử lý', '', 'error');
+    }
+}
+

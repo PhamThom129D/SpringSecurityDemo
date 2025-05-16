@@ -16,12 +16,4 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     List<User> findByStatus(String status);
 
-        @Query("SELECT u FROM User u WHERE u.status = 'pending' AND " +
-                "(LOWER(u.fullname) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-                "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-                "OR LOWER(u.role.name) LIKE LOWER(CONCAT('%', :keyword, '%')))")
-        Page<User> findPendingUsers(@Param("keyword") String keyword, Pageable pageable);
-
-
-
 }

@@ -9,16 +9,17 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private int id;
+    private Long id;
     private String fullname;
     private String phonenumber;
     private String email;
     private String password;
     private String gender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
 
     private String status;
     //    nullable -> Không được null
@@ -46,7 +47,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String fullname, String phonenumber, String email, String password, String gender, Role role, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String fullname, String phonenumber, String email, String password, String gender, Role role, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.fullname = fullname;
         this.phonenumber = phonenumber;
@@ -103,11 +104,11 @@ public class User {
         this.fullname = fullname;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
