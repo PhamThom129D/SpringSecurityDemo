@@ -75,15 +75,12 @@
             <a class="text-sm text-blue-600 hover:underline cursor-pointer"
                th:href="@{/forgot-password}">Quên mật khẩu?</a>
         </div>
-
         <p th:text="${error}" class="text-red-600 mb-3"></p>
-
         <button id="submitBtn" class="bg-black text-white text-sm py-2 px-6 w-full flex items-center justify-center gap-2 rounded mb-4"
                 type="submit">
             Đăng nhập
             <i class="fas fa-arrow-right"></i>
         </button>
-
         <button class="bg-white border border-black text-black text-sm py-2 px-6 w-full flex items-center justify-center gap-2 rounded mb-6"
                 th:onclick="'window.location.href=\'/authenticate/otp\''" type="button">
             Đăng nhập bằng OTP

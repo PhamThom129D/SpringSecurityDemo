@@ -16,8 +16,8 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping(value = "/api/otp" ,produces = "text/plain;charset=UTF-8")
-public class OtpController {
+@RequestMapping(value = "/emailMessage" ,produces = "text/plain;charset=UTF-8")
+public class EmailMessgaeController {
 
     @Autowired
     private IUserRepository userRepository;
