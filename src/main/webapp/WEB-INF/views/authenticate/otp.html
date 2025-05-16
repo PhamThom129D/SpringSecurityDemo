@@ -90,14 +90,10 @@
     const countdownEl = document.getElementById('countdown');
     const loginBtn = document.getElementById('loginBtn');
     const otpInput = document.getElementById('otpInput');
-    const errorMsg = document.getElementById('errorMsg');
 
     let timeLeft = 180;
     let timerInterval = null;
 
-    function clearError() {
-        errorMsg.textContent = '';
-    }
 
 
     function updateCountdown() {
@@ -120,7 +116,6 @@
     }
 
     sendOtpBtn.addEventListener('click', () => {
-        clearError();
         const email = emailInput.value.trim();
         if (!email) {
             window.showError('Vui lòng nhập email!');
@@ -128,6 +123,7 @@
             return;
         }
 
+        sendOtpBtn.disabled = true;
         fetch('/api/otp/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
@@ -144,15 +140,17 @@
             } else {
                 res.text().then(text => {
                     window.showError(text);
+                    sendOtpBtn.disabled = false;
                 });
             }
         }).catch(() => {
             window.showError('Không thể kết nối đến máy chủ!');
+            sendOtpBtn.disabled = false;
+
         });
     });
 
     resendBtn.addEventListener('click', () => {
-        clearError();
         const email = emailInput.value.trim();
         if (!email) {
             window.showError('Vui lòng nhập email!');
@@ -181,7 +179,6 @@
     });
 
     loginBtn.addEventListener('click', () => {
-        clearError();
         const email = emailInput.value.trim();
         const otp = otpInput.value.trim();
 
