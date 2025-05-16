@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User List</title>
+    <link th:href="@{/css/homeAdmin.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script th:src="@{/js/alert.js}"></script>
+</head>
+<style>
+    /* Override DataTables default styles for better Tailwind integration */
+    table.dataTable thead th {
+        padding: 0.75rem 1.5rem;
+        border-bottom: 2px solid #bfdbfe; /* Tailwind blue-200 */
+        background-color: #eff6ff; /* Tailwind blue-50 */
+        color: #374151; /* Tailwind gray-700 */
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+    }
+
+    table.dataTable tbody td {
+        padding: 0.75rem 1.5rem;
+        color: #374151;
+        font-size: 0.875rem;
+    }
+
+    table.dataTable tbody tr:hover {
+        background-color: #f9fafb;
+    }
+</style>
+<body class="min-h-screen flex flex-col md:flex-row bg-gray-50">
+<!-- Sidebar -->
+<aside class="w-full md:w-64 bg-white shadow-md min-h-screen sticky top-0 z-20">
+    <div th:replace="admin/fragments/sidebar :: sidebar"></div>
+</aside>
+
+<div class="flex-1 flex flex-col min-h-screen">
+    <header class="w-full bg-white shadow sticky top-0 z-10">
+        <div th:replace="admin/fragments/header :: header"></div>
+    </header>
+
+    <section class="p-4 md:p-6 flex flex-col gap-6 max-w-7xl mx-auto w-full flex-grow">
+        <table id="userTable" class="display">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Họ và tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Vai trò</th>
+                <th>Ngày đăng ký</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.phonenumber}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.phonenumber}"></td>
+                <td th:text="${user.role.name}"></td>
+                <td th:text="${user.createdAt}"></td>
+                <td>
+                    <button class="approve-btn mr-6"
+                            th:data-id="${user.id}"
+                            th:data-action="'accept'"
+                            title="Duyệt">
+                    <i class="fas fa-check text-lg text-green-500"></i>
+                    </button>
+                    <button class="approve-btn mr-6"
+                            th:data-id="${user.id}"
+                            th:data-action="'reject'"
+                            title="Từ chối">
+
+                    <i class="fas fa-times text-lg text-red-500"></i>
+                    </button>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    <footer class="w-full bg-white shadow mt-auto">
+        <div th:replace="admin/fragments/footer :: footer"></div>
+    </footer>
+</div>
+<script th:src="@{/js/homeAdmin.js}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#userTable').DataTable({
+            searching: true,
+            paging: true,
+            lengthChange: true,
+            ordering: true,
+            info: true,
+            autoWidth: true,
+            language: {
+                "search" : "Tìm kiếm",
+                "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
+                "zeroRecords": "Không tìm thấy kết quả nào",
+                "info": "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                "infoEmpty": "Không có dữ liệu",
+                "infoFiltered": "(lọc từ _MAX_ mục)",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            },
+            responsive: true
+        });
+
+        $('.approve-btn, .reject-btn').click(async function(){
+            const id = $(this).data('id');
+            console.log(id);
+            const action = $(this).data('action');
+            const title = "Xác nhận";
+            const text = action === 'accept' ?
+                'Bạn có chắc chắn muốn duyệt tài khoản này không?' :
+                'Bạn có chắc chắn muốn từ chối tài khoản này không?';
+            const msg = action === 'accept' ? 'Duyệt tài khoản thành công' : 'Từ chối tài khoản thành công';
+            const path = `/manageAccount/approveUser/${action}?id=${id}`;
+            const confirmed = await window.showConfirmation(title, text);
+            if (confirmed) {
+                console.log(path);
+                handleAction(path, msg);
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

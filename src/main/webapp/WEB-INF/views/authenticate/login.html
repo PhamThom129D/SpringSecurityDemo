@@ -96,15 +96,14 @@
         </div>
     </form>
 </div>
-
-<script>
+<script th:src="@{/js/alert.js}"></script>
+<script th:inline="javascript">
     const phoneGroup = document.getElementById('phoneGroup');
     const emailGroup = document.getElementById('emailGroup');
     const phoneInput = document.getElementById('phoneInput');
     const emailInput = document.getElementById('emailInput');
     const loginForm = document.getElementById('loginForm');
 
-    // Chuyển đổi hiển thị theo phương thức đăng nhập
     document.querySelectorAll('input[name="loginMethod"]').forEach(radio => {
         radio.addEventListener('change', () => {
             if (radio.value === 'phone' && radio.checked) {
@@ -122,31 +121,20 @@
             }
         });
     });
+    let message = [[${messageLogin}]];
+    if (message) {
+        window.showSuccess(message);
+    }
 
-    // Optional: Validate form before submit
     loginForm.addEventListener('submit', (e) => {
         const selectedMethod = document.querySelector('input[name="loginMethod"]:checked').value;
         if (selectedMethod === 'phone' && !phoneInput.value.trim()) {
             e.preventDefault();
-            Swal.fire({
-                icon: 'error',
-                title: 'Vui lòng nhập số điện thoại!',
-                timer: 1500,
-                showConfirmButton: false,
-                toast: true,
-                position: 'top'
-            });
+            showError('Vui lòng nhập số điện thoại!')
             phoneInput.focus();
         } else if (selectedMethod === 'email' && !emailInput.value.trim()) {
             e.preventDefault();
-            Swal.fire({
-                icon: 'error',
-                title: 'Vui lòng nhập email!',
-                timer: 1500,
-                showConfirmButton: false,
-                toast: true,
-                position: 'top'
-            });
+            showError("Vui lòng nhập email!")
             emailInput.focus();
         }
     });

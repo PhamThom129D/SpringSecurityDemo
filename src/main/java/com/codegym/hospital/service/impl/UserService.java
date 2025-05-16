@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService implements IUserService {
     @Autowired
@@ -68,5 +71,20 @@ public class UserService implements IUserService {
     @Override
     public User isEmailExist(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> getUserByStatus(String status) {
+        return userRepository.findByStatus(status);
+    }
+
+    @Override
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 }

@@ -2,9 +2,16 @@ package com.codegym.hospital.service;
 
 import com.codegym.hospital.model.user.User;
 
+
+import java.util.List;
+import java.util.Optional;
+
 public interface IUserService {
     String registerUser(User user);
     User loginUser(User user);
     User isPhoneNumberExist(String phoneNumber);
     User isEmailExist(String email);
+    List<User> getUserByStatus(String status);
+    void saveUser(User user);
+    Optional<User> getUserById(Long id);
 }

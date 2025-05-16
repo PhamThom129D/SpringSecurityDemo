@@ -37,7 +37,7 @@ public class OtpController {
         }
 
         OtpVerification lastOtp = otpService.getLatestOtpByUser(userOpt);
-        if (lastOtp != null && lastOtp.getCreatedAt().isAfter(LocalDateTime.now().minusMinutes(3))) {
+        if (lastOtp != null && lastOtp.getCreatedAt().isAfter(LocalDateTime.now().minusMinutes(2))) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                     .body("Vui lòng đợi 3 phút để gửi lại OTP.");
         }

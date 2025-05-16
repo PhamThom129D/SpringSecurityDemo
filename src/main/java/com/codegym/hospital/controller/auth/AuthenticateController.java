@@ -30,10 +30,10 @@ public class AuthenticateController {
         return "authenticate/otp";
     }
     @PostMapping("/login")
-    public String processLoginForm(@ModelAttribute("user") User user, Model model) {
+    public String processLoginForm(@ModelAttribute("user") User user, HttpSession session, Model model) {
         User loggedInUser = userService.loginUser(user);
         if (loggedInUser != null) {
-            model.addAttribute("user", loggedInUser);
+            session.setAttribute("loggedInUser", loggedInUser);
             return "admin/home";
         }else {
             model.addAttribute("error", "Số điện thoại hoặc mật khẩu không đúng");
@@ -75,6 +75,7 @@ public class AuthenticateController {
     @GetMapping("/logout")
     public String logout(HttpSession session, Model model) {
         session.invalidate();
+        model.addAttribute("messageLogin","Đăng xuất thành công!");
         return "redirect:/authenticate/login";
     }
 
