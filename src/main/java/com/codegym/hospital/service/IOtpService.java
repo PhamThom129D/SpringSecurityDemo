@@ -3,9 +3,14 @@ package com.codegym.hospital.service;
 import com.codegym.hospital.model.auth.OtpVerification;
 import com.codegym.hospital.model.user.User;
 
+import javax.servlet.http.HttpSession;
+
 public interface IOtpService {
     String generateOtp();
-    OtpVerification createOtpForUser(User user);
-    boolean verifyLatestOtpForUser(User user, String otpCode);
+    OtpVerification createOtpForUser(HttpSession session,User user);
+    boolean verifyLatestOtpForUser(HttpSession session, String otpCode);
+    void sendMessageEmailToUser(String emailAddress, String subject, String messageBody);
+    boolean canSendOtpAgain(HttpSession session);
+    void sendOtpEmail(User user , String otpCode);
 
 }
