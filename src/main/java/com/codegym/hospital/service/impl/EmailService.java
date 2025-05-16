@@ -2,7 +2,7 @@ package com.codegym.hospital.service.impl;
 
 import com.codegym.hospital.model.auth.OtpVerification;
 import com.codegym.hospital.model.user.User;
-import com.codegym.hospital.service.IOtpService;
+import com.codegym.hospital.service.IEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
-public class OtpService implements IOtpService {
+public class EmailService implements IEmailService {
 
     @Autowired
     private JavaMailSender mailSender;

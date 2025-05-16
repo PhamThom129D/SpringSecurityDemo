@@ -3,25 +3,21 @@ package com.codegym.hospital.controller.auth;
 import com.codegym.hospital.model.auth.OtpVerification;
 import com.codegym.hospital.model.user.User;
 import com.codegym.hospital.repository.user.IUserRepository;
-import com.codegym.hospital.service.IOtpService;
-import com.codegym.hospital.service.impl.OtpService;
+import com.codegym.hospital.service.IEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping(value = "/emailMessage" ,produces = "text/plain;charset=UTF-8")
 public class EmailMessgaeController {
 
     @Autowired
-    private IOtpService otpService;
+    private IEmailService emailService;
     @Autowired
     private IUserRepository userRepository;
 
@@ -33,12 +29,12 @@ public class EmailMessgaeController {
         if (userOpt == null) {
             return ResponseEntity.badRequest().body("Email chưa đăng ký tài khoản!");
         }
-        if(!otpService.canSendOtpAgain(session)){
+        if(!emailService.canSendOtpAgain(session)){
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                     .body("Vui lòng đợi ít nhất 3 phút để gửi lại mã OTP.");
         }
-        OtpVerification otp = otpService.createOtpForUser(session,userOpt);
-        otpService.sendOtpEmail(userOpt,otp.getOtpCode());
+        OtpVerification otp = emailService.createOtpForUser(session,userOpt);
+        emailService.sendOtpEmail(userOpt,otp.getOtpCode());
         return ResponseEntity.ok("Mã OTP đã được gửi thành công.");
     }
 
@@ -58,7 +54,7 @@ public class EmailMessgaeController {
             return ResponseEntity.badRequest().body("Không tìm thấy người dùng.");
         }
 
-        if (otpService.verifyLatestOtpForUser(session,code)) {
+        if (emailService.verifyLatestOtpForUser(session,code)) {
             session.removeAttribute("otpVerification");
             session.setAttribute("loggedInUser", user);
             return ResponseEntity.ok("OK");

@@ -24,7 +24,8 @@ public class AuthenticateController {
     public String showLoginForm(Model model) {
         model.addAttribute("user", new User());
         return "authenticate/login";
-    }@GetMapping("/otp")
+    }
+    @GetMapping("/otp")
     public String showLoginOTPForm(Model model) {
         model.addAttribute("user", new User());
         return "authenticate/otp";
@@ -46,7 +47,6 @@ public class AuthenticateController {
         model.addAttribute("user", new User());
         return "authenticate/register";
     }
-
     @PostMapping("/register")
     public String processRegisterForm(@ModelAttribute("user") User user, Model model) {
         String phone = user.getPhonenumber();
@@ -71,7 +71,6 @@ public class AuthenticateController {
         model.addAttribute("messageLogin", message);
         return "authenticate/login";
     }
-
     @GetMapping("/logout")
     public String logout(HttpSession session, Model model) {
         session.invalidate();

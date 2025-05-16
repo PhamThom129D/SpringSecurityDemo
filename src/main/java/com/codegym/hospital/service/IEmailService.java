@@ -5,7 +5,7 @@ import com.codegym.hospital.model.user.User;
 
 import javax.servlet.http.HttpSession;
 
-public interface IOtpService {
+public interface IEmailService {
     String generateOtp();
     OtpVerification createOtpForUser(HttpSession session,User user);
     boolean verifyLatestOtpForUser(HttpSession session, String otpCode);
