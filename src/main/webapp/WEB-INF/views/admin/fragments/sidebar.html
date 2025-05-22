@@ -1,12 +1,9 @@
 
 <div th:fragment="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-[#d9e9f8] p-6 overflow-y-auto shadow-lg z-40 transition-transform duration-300 ease-in-out" id="sidebar">
   <div class="sidebar-logo mb-8">
-    <img
-            alt="Logo bệnh viện màu xanh dương với biểu tượng chữ thập y tế hiện đại"
-            height="50"
-            th:src="@{/images/logo.png}" th:alt="Logo"
-            width="150"
-    />
+    <a href="emailMessage/home">
+      <img alt="Logo" height="50" width="150" th:src="@{/images/logo.png}" th:alt="Logo"/>
+    </a>
   </div>
   <nav class="flex flex-col space-y-8">
     <a class="sidebar-link" href="/manageAccount/approveUser" title="Quản lý tài khoản">

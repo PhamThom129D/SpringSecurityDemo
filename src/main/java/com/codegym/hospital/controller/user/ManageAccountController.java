@@ -1,7 +1,9 @@
 package com.codegym.hospital.controller.user;
 
 import com.codegym.hospital.model.user.User;
+import com.codegym.hospital.service.IDoctorService;
 import com.codegym.hospital.service.IEmailService;
+import com.codegym.hospital.service.IPatientService;
 import com.codegym.hospital.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -37,29 +40,36 @@ public class ManageAccountController {
         return "admin/manageAccount/approve-users";
     }
 
+
     @PostMapping("/approveUser/{action}")
-    public ResponseEntity<String> approveUser(@RequestParam("id") Long id, @PathVariable String action){
+    public ResponseEntity<String> approveUser(
+            @RequestParam("id") Long id,
+            @RequestParam(value = "reason", required = false) String reasonFromParam,
+            @RequestBody(required = false) Map<String, String> payload,
+            @PathVariable String action) {
+
         Optional<User> optionalUser = userService.getUserById(id);
-        if (optionalUser.isEmpty()) {
+        if (!optionalUser.isPresent()) {
             return ResponseEntity.badRequest().body("Không tìm thấy user");
         }
         User user = optionalUser.get();
+
         if (action.equals("accept")) {
             user.setStatus("active");
             emailService.sendApprovalNotificationEmail(user.getEmail());
-
+            userService.saveUser(user);
         } else if (action.equals("reject")) {
-            user.setStatus("inactive");
-            emailService.sendRejectNotificationEmail(user.getEmail());
+            String reason = (payload != null && payload.get("reason") != null)
+                    ? payload.get("reason")
+                    : (reasonFromParam != null ? reasonFromParam : "Không có lý do cụ thể.");
+
+            emailService.sendRejectNotificationEmail(user.getEmail(), reason);
+            userService.deleteUser(user.getId());
         } else {
             return ResponseEntity.badRequest().body("Trạng thái không hợp lệ");
         }
-
-        userService.saveUser(user);
         return ResponseEntity.ok("");
     }
-
-
 
 
 }

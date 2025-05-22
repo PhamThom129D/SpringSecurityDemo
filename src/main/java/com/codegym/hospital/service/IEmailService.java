@@ -14,6 +14,6 @@ public interface IEmailService {
     void sendOtpEmail(User user , String otpCode);
 
     void sendApprovalNotificationEmail(String email);
-    void sendRejectNotificationEmail(String email);
+    void sendRejectNotificationEmail(String email,String reason);
 
 }

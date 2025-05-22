@@ -18,7 +18,7 @@ public class Patients {
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
 
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth", nullable = true)
     private LocalDate dateOfBirth;
 
     @Column(columnDefinition = "TEXT")
@@ -34,6 +34,10 @@ public class Patients {
     private MultipartFile avatarFile;
 
     public Patients() {
+    }
+
+    public Patients(User user) {
+        this.user = user;
     }
 
     public Patients(Integer id, User user, LocalDate dateOfBirth, String address, String avtPath, Boolean status) {

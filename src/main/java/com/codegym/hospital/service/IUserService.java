@@ -14,4 +14,5 @@ public interface IUserService {
     List<User> getUserByStatus(String status);
     void saveUser(User user);
     Optional<User> getUserById(Long id);
+    void deleteUser(Long id);
 }

@@ -5,5 +5,5 @@ import com.codegym.hospital.model.user.Doctors;
 import java.util.List;
 
 public interface IDoctorService  {
-    List<Doctors> getAllDoctor();
+    void save(Doctors doctor);
 }

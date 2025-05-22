@@ -24,7 +24,7 @@ public class Doctors {
     private String bio;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "department_id", nullable = true, referencedColumnName = "id")
     private Departments department;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
@@ -37,6 +37,10 @@ public class Doctors {
     private MultipartFile avatarFile;
 
     public Doctors() {
+    }
+
+    public Doctors(User user) {
+        this.user = user;
     }
 
     public Doctors(Integer id, User user, String degree, String bio, Departments department, Boolean status, String avtPath) {
