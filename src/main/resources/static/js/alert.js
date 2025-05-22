@@ -41,7 +41,6 @@ window.handleAction = function(path, msg) {
     fetch(path, {
         method: 'POST'
     }).then(response => {
-        console.log(response);
         if (response.ok) {
             window.showSuccess(msg).then(() => {
                 location.reload();

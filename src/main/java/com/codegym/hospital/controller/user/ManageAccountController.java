@@ -1,6 +1,7 @@
 package com.codegym.hospital.controller.user;
 
 import com.codegym.hospital.model.user.User;
+import com.codegym.hospital.service.IEmailService;
 import com.codegym.hospital.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -15,6 +18,18 @@ import java.util.Optional;
 public class ManageAccountController {
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IEmailService emailService;
+
+    @GetMapping("listUser")
+    public String showListUser(Model model) {
+        List<User> userList = new ArrayList<>();
+        userList.addAll(userService.getUserByStatus("inactive"));
+        userList.addAll(userService.getUserByStatus("active"));
+        model.addAttribute("users", userList);
+        return "admin/manageAccount/list-users";
+    }
+
 
     @GetMapping("approveUser")
     public String test(Model model) {
@@ -31,8 +46,11 @@ public class ManageAccountController {
         User user = optionalUser.get();
         if (action.equals("accept")) {
             user.setStatus("active");
+            emailService.sendApprovalNotificationEmail(user.getEmail());
+
         } else if (action.equals("reject")) {
             user.setStatus("inactive");
+            emailService.sendRejectNotificationEmail(user.getEmail());
         } else {
             return ResponseEntity.badRequest().body("Trạng thái không hợp lệ");
         }
@@ -40,6 +58,8 @@ public class ManageAccountController {
         userService.saveUser(user);
         return ResponseEntity.ok("");
     }
+
+
 
 
 }

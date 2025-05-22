@@ -1,4 +1,4 @@
-package com.codegym.hospital.service.impl;
+package com.codegym.hospital.service.impl.user;
 
 import com.codegym.hospital.model.user.Role;
 import com.codegym.hospital.model.user.User;
@@ -87,4 +87,5 @@ public class UserService implements IUserService {
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
+
 }

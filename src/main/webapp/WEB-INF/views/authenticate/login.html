@@ -15,15 +15,14 @@
 </head>
 <body class="bg-[#e6f0f6] min-h-screen flex items-center justify-center p-4">
 <div class="bg-[#d9e9f8] max-w-4xl w-full flex flex-col md:flex-row p-8 md:p-12">
+    <span id="messageLogin" th:text="${messageLogin}" style="display:none;"></span>
     <div class="md:w-1/2 relative flex justify-center items-center border border-[#d9e9f8]">
         <img alt="Exterior view of a modern hospital building with clear blue sky"
              class="object-cover w-full h-full"
              height="500"
-             src="/images/model_login.png"
+             th:src="@{/images/model_login.png}"
              width="400"/>
     </div>
-
-    <!-- FORM ĐĂNG NHẬP -->
     <form th:action="@{/authenticate/login}" th:object="${user}" method="post"
           aria-label="Login Form"
           class="md:w-1/2 flex flex-col justify-center px-6 md:px-12" id="loginForm">
@@ -43,7 +42,7 @@
             </label>
         </div>
 
-        <!-- Số điện thoại với chọn quốc gia -->
+        <!-- Số điện thoại -->
         <div id="phoneGroup" class="relative mb-4 flex gap-2 items-center">
             <input th:field="*{phonenumber}"
                    id="phoneInput"
@@ -75,15 +74,12 @@
             <a class="text-sm text-blue-600 hover:underline cursor-pointer"
                th:href="@{/forgot-password}">Quên mật khẩu?</a>
         </div>
-
         <p th:text="${error}" class="text-red-600 mb-3"></p>
-
         <button id="submitBtn" class="bg-black text-white text-sm py-2 px-6 w-full flex items-center justify-center gap-2 rounded mb-4"
                 type="submit">
             Đăng nhập
             <i class="fas fa-arrow-right"></i>
         </button>
-
         <button class="bg-white border border-black text-black text-sm py-2 px-6 w-full flex items-center justify-center gap-2 rounded mb-6"
                 th:onclick="'window.location.href=\'/authenticate/otp\''" type="button">
             Đăng nhập bằng OTP
@@ -97,47 +93,6 @@
     </form>
 </div>
 <script th:src="@{/js/alert.js}"></script>
-<script th:inline="javascript">
-    const phoneGroup = document.getElementById('phoneGroup');
-    const emailGroup = document.getElementById('emailGroup');
-    const phoneInput = document.getElementById('phoneInput');
-    const emailInput = document.getElementById('emailInput');
-    const loginForm = document.getElementById('loginForm');
-
-    document.querySelectorAll('input[name="loginMethod"]').forEach(radio => {
-        radio.addEventListener('change', () => {
-            if (radio.value === 'phone' && radio.checked) {
-                phoneGroup.classList.remove('hidden');
-                emailGroup.classList.add('hidden');
-                phoneInput.setAttribute('required', 'required');
-                emailInput.removeAttribute('required');
-                emailInput.value = '';
-            } else if (radio.value === 'email' && radio.checked) {
-                emailGroup.classList.remove('hidden');
-                phoneGroup.classList.add('hidden');
-                emailInput.setAttribute('required', 'required');
-                phoneInput.removeAttribute('required');
-                phoneInput.value = '';
-            }
-        });
-    });
-    let message = [[${messageLogin}]];
-    if (message) {
-        window.showSuccess(message);
-    }
-
-    loginForm.addEventListener('submit', (e) => {
-        const selectedMethod = document.querySelector('input[name="loginMethod"]:checked').value;
-        if (selectedMethod === 'phone' && !phoneInput.value.trim()) {
-            e.preventDefault();
-            showError('Vui lòng nhập số điện thoại!')
-            phoneInput.focus();
-        } else if (selectedMethod === 'email' && !emailInput.value.trim()) {
-            e.preventDefault();
-            showError("Vui lòng nhập email!")
-            emailInput.focus();
-        }
-    });
-</script>
+<script th:src="@{/js/auth/login.js}"></script>
 </body>
 </html>
