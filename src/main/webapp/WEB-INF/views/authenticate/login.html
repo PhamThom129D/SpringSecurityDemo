@@ -15,6 +15,7 @@
 </head>
 <body class="bg-[#e6f0f6] min-h-screen flex items-center justify-center p-4">
 <div class="bg-[#d9e9f8] max-w-4xl w-full flex flex-col md:flex-row p-8 md:p-12">
+    <span id="messageLogin" th:text="${messageLogin}" style="display:none;"></span>
     <div class="md:w-1/2 relative flex justify-center items-center border border-[#d9e9f8]">
         <img alt="Exterior view of a modern hospital building with clear blue sky"
              class="object-cover w-full h-full"
@@ -22,8 +23,6 @@
              th:src="@{/images/model_login.png}"
              width="400"/>
     </div>
-
-    <!-- FORM ĐĂNG NHẬP -->
     <form th:action="@{/authenticate/login}" th:object="${user}" method="post"
           aria-label="Login Form"
           class="md:w-1/2 flex flex-col justify-center px-6 md:px-12" id="loginForm">
@@ -94,6 +93,6 @@
     </form>
 </div>
 <script th:src="@{/js/alert.js}"></script>
-<script th:scr="@{/js/auth/login.js}"></script>
+<script th:src="@{/js/auth/login.js}"></script>
 </body>
 </html>

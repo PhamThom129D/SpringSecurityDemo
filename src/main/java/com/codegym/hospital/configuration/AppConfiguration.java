@@ -19,6 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -69,10 +71,10 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
     private String hibernateDialect;
 
     @Value("${spring.mail.username}")
-    private String username;
+    private String mailUsername;
 
     @Value("${spring.mail.password}")
-    private String password;
+    private String mailPassword;
 
 
     @Bean
@@ -81,8 +83,8 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
+        mailSender.setUsername(mailUsername);
+        mailSender.setPassword(mailPassword);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
@@ -93,6 +95,7 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
 
         return mailSender;
     }
+
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

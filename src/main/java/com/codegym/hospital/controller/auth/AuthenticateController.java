@@ -74,7 +74,6 @@ public class AuthenticateController {
     @GetMapping("/logout")
     public String logout(HttpSession session, Model model) {
         session.invalidate();
-        model.addAttribute("messageLogin","Đăng xuất thành công!");
         return "redirect:/authenticate/login";
     }
 

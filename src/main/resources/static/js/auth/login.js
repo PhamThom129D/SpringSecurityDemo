@@ -22,10 +22,12 @@
         }
     });
 });
-    let message = [[${messageLogin}]];
-    if (message) {
-    window.showSuccess(message);
-}
+    document.addEventListener("DOMContentLoaded", function () {
+        const message = document.getElementById("messageLogin")?.textContent;
+        if (message && message.trim() !== "") {
+            showSuccess(message)
+        }
+    });
 
     loginForm.addEventListener('submit', (e) => {
     const selectedMethod = document.querySelector('input[name="loginMethod"]:checked').value;

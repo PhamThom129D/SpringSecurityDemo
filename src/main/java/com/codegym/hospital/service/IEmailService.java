@@ -13,4 +13,7 @@ public interface IEmailService {
     boolean canSendOtpAgain(HttpSession session);
     void sendOtpEmail(User user , String otpCode);
 
+    void sendApprovalNotificationEmail(String email);
+    void sendRejectNotificationEmail(String email);
+
 }

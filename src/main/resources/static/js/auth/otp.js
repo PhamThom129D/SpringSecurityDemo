@@ -40,7 +40,7 @@
 }
 
     sendOtpBtn.disabled = true;
-    fetch('/api/otp/send', {
+    fetch('/emailMessage/sendOtp', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
     body: new URLSearchParams({ email: email })
@@ -74,7 +74,7 @@
     return;
 }
 
-    fetch('/api/otp/send', {
+    fetch('/emailMessage/sendOtp', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
     body: new URLSearchParams({ email: email })
@@ -104,14 +104,14 @@
     return;
 }
 
-    fetch('/api/otp/verify', {
+    fetch('/emailMessage/verifyOtp', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
     body: new URLSearchParams({ email: email, code: otp })
 }).then(res => {
     if (res.ok) {
     window.showSuccess('Xác thực thành công!').then(() => {
-    window.location.href = '/api/otp/home';
+    window.location.href = '/emailMessage/home';
 });
 } else {
     res.text().then(text => {

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>User List</title>
+    <title>Duyệt tài khoản đăng ký</title>
     <link th:href="@{/css/homeAdmin.css}" rel="stylesheet">
+    <link th:href="@{/css/dataTable.css}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -12,52 +13,21 @@
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <script th:src="@{/js/alert.js}"></script>
+
 </head>
-<style>
-    /* Override DataTables default styles for better Tailwind integration */
-    table.dataTable thead th {
-        padding: 0.75rem 1.5rem;
-        border-bottom: 2px solid #bfdbfe; /* Tailwind blue-200 */
-        background-color: #eff6ff; /* Tailwind blue-50 */
-        color: #374151; /* Tailwind gray-700 */
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.05em;
-    }
+<body class="bg-[#d3e4f5] min-h-screen overflow-y-auto">
+<!-- Include header fragment -->
+<div th:replace="admin/fragments/sidebar :: sidebar"></div>
+<div th:replace="admin/fragments/header :: header"></div>
 
-    table.dataTable tbody td {
-        padding: 0.75rem 1.5rem;
-        color: #374151;
-        font-size: 0.875rem;
-    }
 
-    table.dataTable tbody tr:hover {
-        background-color: #f9fafb;
+<div class="flex">
+    <!-- Sidebar -->
 
-    .paginate_button.disabled {
-        opacity: 0.5 !important;
-        pointer-events: none !important;
-        cursor: default !important;
-        color : #dadada
-    }
+    <main class="flex-1 p-8 w-[80%] justify-end">
+        <section class="p-4 md:p-6 flex flex-col gap-6 max-w-7xl w-full flex-grow bg-blue-50">
 
-}
-</style>
-<body class="min-h-screen flex flex-col md:flex-row bg-gray-50">
-<!-- Sidebar -->
-<aside class="w-full md:w-64 bg-white shadow-md min-h-screen sticky top-0 z-20">
-    <div th:replace="admin/fragments/sidebar :: sidebar"></div>
-</aside>
-
-<div class="flex-1 flex flex-col min-h-screen">
-    <header class="w-full bg-white shadow sticky top-0 z-10">
-        <div th:replace="admin/fragments/header :: header"></div>
-    </header>
-
-    <section class="p-4 md:p-6 flex flex-col gap-6 max-w-7xl mx-auto w-full flex-grow">
-
-        <table id="userTable" class="display">
+        <table id="userTable" class="display pt-4">
             <thead>
             <tr>
                 <th>#</th>
@@ -75,11 +45,7 @@
                 <td th:text="${user.fullname}"></td>
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.phonenumber}"></td>
-                <td th:switch="${user.role.name}">
-                    <span th:case="'DOCTOR'">Bác sĩ</span>
-                    <span th:case="'RECEPTIONIST'">Nhân viên tiếp nhận</span>
-                    <span th:case="*">Không xác định</span>
-                </td>
+                <td th:text="${user.role.name == 'DOCTOR' ? 'Bác sĩ' : (user.role.name == 'RECEPTIONIST' ? 'Nhân viên tiếp nhận' : user.role.name)}"></td>
 
                 <td th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
                 <td>
@@ -102,59 +68,17 @@
             </tbody>
         </table>
     </section>
+    </main>
+</div>
     <footer class="w-full bg-white shadow mt-auto">
         <div th:replace="admin/fragments/footer :: footer"></div>
     </footer>
-</div>
-<script th:src="@{/js/homeAdmin.js}"></script>
 
+<script th:src="@{/js/homeAdmin.js}"></script>
+<script th:src="@{/js/admin/dataTable.js}"></script>
 <script>
     $(document).ready(function () {
-        var table = $('#userTable').DataTable({
-            searching: true,
-            paging: true,
-            lengthChange: true,
-            ordering: true,
-            info: true,
-            autoWidth: true,
-            language: {
-                "search": "Tìm kiếm",
-                "lengthMenu": "Hiển thị _MENU_ dòng mỗi trang",
-                "zeroRecords": "Không tìm thấy kết quả nào",
-                "info": "Hiển thị _START_ đến _END_ của _TOTAL_ mục",
-                "infoEmpty": "Không có dữ liệu",
-                "infoFiltered": "(lọc từ _MAX_ mục)",
-                "paginate": {
-                    "first": "Đầu",
-                    "last": "Cuối",
-                    "next": "Sau",
-                    "previous": "Trước"
-                }
-            },
-            responsive: true
-        });
-
-        $('div.dataTables_filter input')
-            .attr('placeholder', 'Nhập từ khóa tìm kiếm...')
-            .addClass('px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300');
-
-        const roleFilterDropdown = $(
-            '<label class="ml-4 mr-2 font-medium text-gray-700">Lọc theo vai trò:</label>' +
-            '<select id="roleFilter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300">' +
-            '<option value="">Tất cả</option>' +
-            '<option value="Bác sĩ">Bác sĩ</option>' +
-            '<option value="Nhân viên tiếp nhận">Nhân viên tiếp nhận</option>' +
-            '</select>'
-        );
-
-        $('div.dataTables_filter').append(roleFilterDropdown);
-
-        $('#roleFilter').on('change', function () {
-            const selectedRole = $(this).val();
-            table.column(4).search(selectedRole).draw();
-        });
-
-        $('.approve-btn, .reject-btn').click(async function () {
+        $('#userTable tbody').on('click', '.approve-btn, .reject-btn', async function () {
             const id = $(this).data('id');
             const action = $(this).data('action');
             const title = "Xác nhận";
@@ -168,6 +92,7 @@
                 handleAction(path, msg);
             }
         });
+
 
     });
 

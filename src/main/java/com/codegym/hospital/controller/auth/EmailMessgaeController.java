@@ -22,7 +22,7 @@ public class EmailMessgaeController {
     private IUserRepository userRepository;
 
 
-    @PostMapping("/send")
+    @PostMapping("/sendOtp")
     @ResponseBody
     public ResponseEntity<String> sendOtp(@RequestParam("email") String email, HttpSession session) {
         User userOpt = userRepository.findByEmail(email);
@@ -39,7 +39,7 @@ public class EmailMessgaeController {
     }
 
 
-    @PostMapping("/verify")
+    @PostMapping("/verifyOtp")
     @ResponseBody
     public ResponseEntity<String> verifyOtp(@RequestParam String email,
                                             @RequestParam String code,

@@ -25,10 +25,10 @@ public class User {
     //    nullable -> Không được null
     //     updatable -> Không cho phép update sau khi đã insert
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at", nullable = true)
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     // Khi save lần đầu -> gán gtri cả 2
     @PrePersist
@@ -60,17 +60,6 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public User(String fullname, String phonenumber, String email, String password, String gender, Role role, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.fullname = fullname;
-        this.phonenumber = phonenumber;
-        this.email = email;
-        this.password = password;
-        this.gender = gender;
-        this.role = role;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 
     public String getGender() {
         return gender;
@@ -136,7 +125,7 @@ public class User {
         this.role = role;
     }
 
-    public String isStatus() {
+    public String getStatus() {
         return status;
     }
 
