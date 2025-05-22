@@ -1,37 +1,151 @@
-
-<div th:fragment="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-[#d9e9f8] p-6 overflow-y-auto shadow-lg z-40 transition-transform duration-300 ease-in-out" id="sidebar">
+<div
+        th:fragment="sidebar"
+        class="sidebar fixed top-0 left-0 h-full w-64 bg-[#d9e9f8] p-6 overflow-y-auto shadow-lg z-40 transition-transform duration-300 ease-in-out"
+        id="sidebar"
+>
   <div class="sidebar-logo mb-8">
-    <a href="emailMessage/home">
-      <img alt="Logo" height="50" width="150" th:src="@{/images/logo.png}" th:alt="Logo"/>
+    <a href="emailMessage/home" class="inline-block">
+      <img
+              alt="Logo"
+              height="50"
+              width="150"
+              th:src="@{/images/logo.png}"
+              th:alt="Logo"
+              class="object-contain"
+      />
     </a>
   </div>
+
   <nav class="flex flex-col space-y-8">
-    <a class="sidebar-link" href="/manageAccount/approveUser" title="Quản lý tài khoản">
-      <i class="fas fa-user-injured sidebar-icon text-blue-600"></i> Duyệt tài khoản
-    </a>
-    <a class="sidebar-link" href="#" title="Hồ sơ bệnh án">
-      <i class="fas fa-file-medical-alt sidebar-icon text-green-600"></i> Hồ sơ bệnh án
-    </a>
-    <a class="sidebar-link" href="/manageAccount/listUser" title="Quản lý nhân viên">
-      <i class="fas fa-users-cog sidebar-icon text-purple-600"></i> Quản lý tài khoản
-    </a>
-    <a class="sidebar-link" href="#" title="Quản lý bác sĩ">
-      <i class="fas fa-user-md sidebar-icon text-red-600"></i> Quản lý bác sĩ
-    </a>
-    <a class="sidebar-link" href="#" title="Quản lý phòng khám">
-      <i class="fas fa-clinic-medical sidebar-icon text-yellow-600"></i> Quản lý phòng khám
-    </a>
-    <a class="sidebar-link" href="#" title="Quản lý khoa khám">
-      <i class="fas fa-hospital-symbol sidebar-icon text-indigo-600"></i> Quản lý khoa khám
-    </a>
-    <a class="sidebar-link" href="#" title="Thống kê doanh số">
-      <i class="fas fa-chart-line sidebar-icon text-pink-600"></i> Thống kê doanh số
-    </a>
-    <a class="sidebar-link" href="#" title="Cấu hình trang web">
-      <i class="fas fa-cogs sidebar-icon text-gray-700"></i> Cấu hình trang web
-    </a>
-    <a class="sidebar-link" href="#" title="Bản đồ bệnh viện">
-      <i class="fas fa-map-marked-alt sidebar-icon text-teal-600"></i> Bản đồ bệnh viện
-    </a>
+    <!-- Quản lý tài khoản -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+        <i class="fas fa-user-cog text-blue-600 mr-2"></i> Quản lý tài khoản
+      </h3>
+      <div class="flex flex-col space-y-2 ml-6">
+        <a
+                class="sidebar-link flex items-center text-blue-700 hover:text-blue-900 transition-colors"
+                href="/manageAccount/listUser"
+                title="Danh sách tài khoản"
+        >
+          <i class="fas fa-list sidebar-icon mr-2"></i> Danh sách tài khoản
+        </a>
+        <a
+                class="sidebar-link flex items-center text-blue-700 hover:text-blue-900 transition-colors"
+                href="/manageAccount/approveUser"
+                title="Duyệt tài khoản"
+        >
+          <i class="fas fa-user-check sidebar-icon mr-2"></i> Duyệt tài khoản
+        </a>
+        <a
+                class="sidebar-link flex items-center text-blue-700 hover:text-blue-900 transition-colors"
+                href="/manageAccount/addUser"
+                title="Thêm mới tài khoản"
+        >
+          <i class="fas fa-user-plus sidebar-icon mr-2"></i> Thêm mới tài khoản
+        </a>
+      </div>
+    </div>
+
+    <!-- Quản lý phòng khám -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+        <i class="fas fa-clinic-medical text-yellow-600 mr-2"></i> Quản lý phòng khám
+      </h3>
+      <div class="flex flex-col space-y-2 ml-6">
+        <a
+                class="sidebar-link flex items-center text-yellow-700 hover:text-yellow-900 transition-colors"
+                href="#"
+                title="Danh sách phòng khám"
+        >
+          <i class="fas fa-list sidebar-icon mr-2"></i> Danh sách phòng khám
+        </a>
+        <a
+                class="sidebar-link flex items-center text-yellow-700 hover:text-yellow-900 transition-colors"
+                href="#"
+                title="Thêm mới phòng khám"
+        >
+          <i class="fas fa-plus sidebar-icon mr-2"></i> Thêm mới phòng khám
+        </a>
+      </div>
+    </div>
+
+    <!-- Quản lý khoa khám -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+        <i class="fas fa-hospital-symbol text-indigo-600 mr-2"></i> Quản lý khoa khám
+      </h3>
+      <div class="flex flex-col space-y-2 ml-6">
+        <a
+                class="sidebar-link flex items-center text-indigo-700 hover:text-indigo-900 transition-colors"
+                href="#"
+                title="Danh sách khoa khám"
+        >
+          <i class="fas fa-list sidebar-icon mr-2"></i> Danh sách khoa khám
+        </a>
+        <a
+                class="sidebar-link flex items-center text-indigo-700 hover:text-indigo-900 transition-colors"
+                href="#"
+                title="Thêm mới khoa khám"
+        >
+          <i class="fas fa-plus sidebar-icon mr-2"></i> Thêm mới khoa khám
+        </a>
+      </div>
+    </div>
+
+    <!-- Thống kê doanh số -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+        <i class="fas fa-chart-line text-pink-600 mr-2"></i> Thống kê doanh số
+      </h3>
+      <div class="flex flex-col space-y-2 ml-6">
+        <a
+                class="sidebar-link flex items-center text-pink-700 hover:text-pink-900 transition-colors"
+                href="#"
+                title="Xem thống kê doanh số"
+        >
+          <i class="fas fa-chart-bar sidebar-icon mr-2"></i> Xem thống kê doanh số
+        </a>
+      </div>
+    </div>
+
+    <!-- Cấu hình trang web -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+        <i class="fas fa-cogs text-gray-700 mr-2"></i> Cấu hình trang web
+      </h3>
+      <div class="flex flex-col space-y-2 ml-6">
+        <a
+                class="sidebar-link flex items-center text-gray-700 hover:text-gray-900 transition-colors"
+                href="#"
+                title="Cấu hình chung"
+        >
+          <i class="fas fa-sliders-h sidebar-icon mr-2"></i> Cấu hình chung
+        </a>
+        <a
+                class="sidebar-link flex items-center text-gray-700 hover:text-gray-900 transition-colors"
+                href="#"
+                title="Quản lý người dùng"
+        >
+          <i class="fas fa-users-cog sidebar-icon mr-2"></i> Quản lý người dùng
+        </a>
+      </div>
+    </div>
+
+    <!-- Bản đồ bệnh viện -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+        <i class="fas fa-map-marked-alt text-teal-600 mr-2"></i> Bản đồ bệnh viện
+      </h3>
+      <div class="flex flex-col space-y-2 ml-6">
+        <a
+                class="sidebar-link flex items-center text-teal-700 hover:text-teal-900 transition-colors"
+                href="#"
+                title="Xem bản đồ bệnh viện"
+        >
+          <i class="fas fa-map sidebar-icon mr-2"></i> Xem bản đồ bệnh viện
+        </a>
+      </div>
+    </div>
   </nav>
 </div>

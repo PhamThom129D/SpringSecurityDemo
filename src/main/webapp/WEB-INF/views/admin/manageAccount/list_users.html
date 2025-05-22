@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <title>Danh sách tài khoản</title>
     <link th:href="@{/css/homeAdmin.css}" rel="stylesheet">
@@ -37,6 +37,7 @@
                     <th>Ngày đăng ký</th>
                     <th>Thời gian cập nhật</th>
                     <th>Trạng thái</th>
+                    <th>Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -65,6 +66,18 @@
                             </i>
                         </button>
                     </td>
+                    <td>
+                        <button type="button" title="Xem chi tiết" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <a th:href="@{/manageAccount/updateUser/{id}(id=${user.id})}" title="Cập nhật thông tin" class="text-yellow-600 hover:text-yellow-800">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button type="button" title="Chặn/Kích hoạt tài khoản" class="text-red-600 hover:text-red-800" th:data-id="${user.id}" th:data-status="${user.status}">
+                            <i class="fas" th:classappend="${user.status == 'active'} ? ' fa-user-slash' : ' fa-user-check'"></i>
+                        </button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </section>
