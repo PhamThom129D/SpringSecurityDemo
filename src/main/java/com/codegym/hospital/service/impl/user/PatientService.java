@@ -15,6 +15,11 @@ public class PatientService implements IPatientService {
     public IPatientRepository patientRepository;
 
     @Override
+    public Patients getPatientByUserId(Long userId) {
+        return patientRepository.findByUserId(userId);
+    }
+
+    @Override
     public void save(Patients patient) {
         patientRepository.save(patient);
     }

@@ -20,4 +20,9 @@ public class DoctorService implements IDoctorService {
     public void save(Doctors doctor) {
         doctorRepository.save(doctor);
     }
+
+    @Override
+    public Doctors findByUserID(Long userId) {
+        return doctorRepository.findByUser_Id(userId);
+    }
 }

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IDoctorService  {
     void save(Doctors doctor);
+    Doctors findByUserID(Long userId);
 }

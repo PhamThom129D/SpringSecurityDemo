@@ -67,9 +67,9 @@
                         </button>
                     </td>
                     <td>
-                        <button type="button" title="Xem chi tiết" class="text-blue-600 hover:text-blue-800">
+                        <a th:href="@{/manageAccount/viewUser/{id}(id=${user.id})}" title="Xem chi tiết" class="text-blue-600 hover:text-blue-800">
                             <i class="fas fa-eye"></i>
-                        </button>
+                        </a>
                         <a th:href="@{/manageAccount/updateUser/{id}(id=${user.id})}" title="Cập nhật thông tin" class="text-yellow-600 hover:text-yellow-800">
                             <i class="fas fa-edit"></i>
                         </a>

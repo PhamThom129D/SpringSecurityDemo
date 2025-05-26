@@ -3,7 +3,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1" name="viewport"/>
     <title>
-        Thêm người dùng mới
+        Cập nhật thông tin
     </title>
     <link rel="stylesheet" th:href="@{/css/homeAdmin.css}"/>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"/>
@@ -25,9 +25,8 @@
 </div>
 <div th:replace="admin/fragments/header :: header">
 </div>
-<p th:text="${user.fullname}"></p>
 <div class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-    <main class="flex flex-1 p-8 w-[80%] justify-end">
+    <main class="flex-1 p-8 w-[80%] justify-end">
         <section class="p-4 md:p-6 flex flex-col gap-6 max-w-7xl w-full flex-grow bg-blue-50 rounded-lg shadow-md">
             <div class="flex items-center justify-between mb-6">
                 <h1 class="text-3xl font-bold text-gray-800">
@@ -39,191 +38,23 @@
                     Quay lại danh sách
                 </a>
             </div>
-            <form id="userForm" action="#" autocomplete="off" class="flex flex-col lg:flex-row gap-8" method="POST"
-                  novalidate="" th:object="${user}" enctype="multipart/form-data">
-                <div class="flex-1 space-y-6">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1" for="fullname">
-                            Họ và tên
-                            <span class="text-red-500">*</span>
-                        </label>
-                        <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               id="fullname" name="fullname" placeholder="Nhập họ và tên" required="" type="text"
-                               th:field="*{fullname}"/>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1" for="phonenumber">
-                            Số điện thoại
-                            <span class="text-red-500">*</span>
-                        </label>
-                        <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               id="phonenumber" name="phonenumber" pattern="^\+?\d{9,15}$"
-                               placeholder="Nhập số điện thoại (ví dụ: +84901234567)" required="" type="tel"
-                               th:field="*{phonenumber}"/>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1" for="password">
-                            Mật khẩu
-                            <span class="text-red-500">*</span>
-                        </label>
-                        <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               id="password" minlength="6" name="password" placeholder="Nhập mật khẩu" required=""
-                               type="password" th:field="*{password}"/>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1" for="email">
-                            Email
-                            <span class="text-red-500">*</span>
-                        </label>
-                        <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               id="email" name="email" placeholder="Nhập email (bắt buộc)" type="email"
-                               th:field="*{email}"/>
-                    </div>
-                    <div>
-                        <span class="block text-gray-700 font-medium mb-1">Giới tính</span>
-                        <div class="flex gap-6">
-                            <label class="inline-flex items-center">
-                                <input class="form-radio text-blue-600" type="radio" th:field="*{gender}" value="MALE"/>
-                                <span class="ml-2 text-gray-700">Nam</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input class="form-radio text-blue-600" type="radio" th:field="*{gender}"
-                                       value="FEMALE"/>
-                                <span class="ml-2 text-gray-700">Nữ</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input class="form-radio text-blue-600" type="radio" th:field="*{gender}"
-                                       value="OTHER"/>
-                                <span class="ml-2 text-gray-700">Khác</span>
-                            </label>
-                        </div>
-                    </div>
-
-
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Vai trò <span class="text-red-500">*</span>
-                        </label>
-                        <select id="role_id" th:field="*{role}" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <option th:each="role : ${roles}"
-                                    th:value="${role.id}"
-                                    th:text="${role.name}"
-                                    th:selected="${role.id} == *{role.id}"
-                                    th:attr="data-name=${role.id}"> <!-- giả sử role.code là 'doctor', 'patient', ... -->
-                            </option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">
-                            Trạng thái <span class="text-red-500">*</span>
-                        </label>
-                        <select th:field="*{status}"
-                                class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required>
-                            <option value="active">Hoạt động</option>
-                            <option value="blocked">Khóa tài khoản</option>
-                        </select>
-                    </div>
-
-                </div>
+            <form id="userForm" action="#" method="POST" enctype="multipart/form-data" autocomplete="off"
+                  class="flex flex-col lg:flex-row gap-8"
+                  th:object="${user}" novalidate>
+                <div th:replace="admin/manageAccount/info_user :: info-user"></div>
                 <div class="flex-1 bg-gray-50 border border-gray-300 rounded-lg p-6">
                     <h2 class="text-xl font-semibold mb-4 text-gray-800 text-center">
                         Thông Tin Chi Tiết
                     </h2>
-                    <div class="hidden space-y-5" id="doctor-details">
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="degree">
-                                Bằng cấp
-                            </label>
-                            <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                   id="degree" name="degree" placeholder="Nhập bằng cấp" type="text"/>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="bio">
-                                Tiểu sử
-                            </label>
-                            <textarea
-                                    class="w-full border border-gray-300 rounded-md px-4 py-2 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="bio" name="bio" placeholder="Nhập tiểu sử" rows="4"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="department">
-                                Khoa
-                            </label>
-                            <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="department" name="department">
-                                <option selected="" value="">
-                                    Chọn khoa
-                                </option>
-                                <option value="1">
-                                    Khoa Nội
-                                </option>
-                                <option value="2">
-                                    Khoa Ngoại
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="avtPathDoctor">
-                                Ảnh đại diện
-                            </label>
-                            <input accept="image/*" class="w-full text-gray-700" id="avtPathDoctor" name="avtPathDoctor"
-                                   type="file"/>
-                            <div class="mt-3">
-                                <img alt="Ảnh đại diện bác sĩ xem trước"
-                                     class="mx-auto rounded-md border border-gray-300 max-h-48 object-contain"
-                                     height="300" id="previewDoctor"
-                                     src="https://storage.googleapis.com/a1aa/image/251224a0-0797-432d-04f0-269cec5040ce.jpg"
-                                     width="400"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hidden space-y-5" id="patient-details">
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="dateOfBirth">
-                                Ngày sinh
-                            </label>
-                            <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                   id="dateOfBirth" name="dateOfBirth" type="date"/>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="address">
-                                Địa chỉ
-                            </label>
-                            <textarea
-                                    class="w-full border border-gray-300 rounded-md px-4 py-2 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="address" name="address" placeholder="Nhập địa chỉ" rows="3"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="avtPathPatient">
-                                Ảnh đại diện
-                            </label>
-                            <input accept="image/*" class="w-full text-gray-700" id="avtPathPatient"
-                                   name="avtPathPatient" type="file"/>
-                            <div class="mt-3">
-                                <img alt="Ảnh đại diện bệnh nhân xem trước"
-                                     class="mx-auto rounded-md border border-gray-300 max-h-48 object-contain"
-                                     height="300" id="previewPatient"
-                                     src="https://storage.googleapis.com/a1aa/image/7abcd228-4c8f-4c92-7260-ea7c8433fa5e.jpg"
-                                     width="400"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hidden text-center text-gray-500 mt-10" id="other-details">
-                        <p>
-                            Không có thông tin chi tiết cho vai trò này.
-                        </p>
-                        <img alt="Hình ảnh minh họa không có thông tin chi tiết cho vai trò này"
-                             class="mx-auto mt-4 rounded-md border border-gray-300 max-h-48 object-contain" height="300"
-                             src="https://storage.googleapis.com/a1aa/image/a66e154b-c82f-441c-3170-e786634c7fb1.jpg"
-                             width="400"/>
-                    </div>
+                    <div th:replace="admin/manageAccount/info_user :: info-doctor"></div>
+                    <div th:replace="admin/manageAccount/info_user :: info-patient"></div>
+                    <div th:replace="admin/manageAccount/info_user :: info-other"></div>
                 </div>
             </form>
             <div class="flex justify-end gap-4 mt-6">
                 <button class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
                         form="userForm" type="submit">
-                    Thêm mới
+                    Cập nhật
                 </button>
                 <button class="bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-md hover:bg-gray-400 transition-colors"
                         onclick="window.history.back()" type="button">
@@ -237,57 +68,6 @@
     <div th:replace="admin/fragments/footer :: footer"></div>
 </footer>
 <script th:src="@{/js/admin/homeAdmin.js}"></script>
-<script>
-    const roleSelect = document.getElementById('role_id');
-    const doctorDetails = document.getElementById('doctor-details');
-    const patientDetails = document.getElementById('patient-details');
-    const otherDetails = document.getElementById('other-details');
-
-    function updateDetailsVisibility() {
-        const selectedOption = roleSelect.options[roleSelect.selectedIndex];
-        const roleName = selectedOption ? selectedOption.getAttribute('data-name') : '';
-
-        doctorDetails.classList.add('hidden');
-        patientDetails.classList.add('hidden');
-        otherDetails.classList.add('hidden');
-
-        if (roleName === 'doctor') {
-            doctorDetails.classList.remove('hidden');
-        } else if (roleName === 'patient') {
-            patientDetails.classList.remove('hidden');
-        } else if (roleName === 'admin' || roleName === 'user') {
-            otherDetails.classList.remove('hidden');
-        }
-    }
-
-
-    roleSelect.addEventListener('change', updateDetailsVisibility);
-    window.addEventListener('load', updateDetailsVisibility);
-
-    function previewImage(input, previewId) {
-        const preview = document.getElementById(previewId);
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        } else {
-            if (previewId === 'previewDoctor') {
-                preview.src = "https://placehold.co/400x300/png?text=Ảnh+đại+diện+bác+sĩ";
-            } else if (previewId === 'previewPatient') {
-                preview.src = "https://placehold.co/400x300/png?text=Ảnh+đại+diện+bệnh+nhân";
-            }
-        }
-    }
-
-    document.getElementById('avtPathDoctor').addEventListener('change', function () {
-        previewImage(this, 'previewDoctor');
-    });
-
-    document.getElementById('avtPathPatient').addEventListener('change', function () {
-        previewImage(this, 'previewPatient');
-    });
-</script>
+<script th:src="@{/js/admin/manageUser.js}"></script>
 </body>
 </html>
