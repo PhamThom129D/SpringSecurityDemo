@@ -177,11 +177,14 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         return new BCryptPasswordEncoder();
     }
 
+
+    @Value("${upload_file}")
+    private String uploadPath;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static/images/");
+                .addResourceLocations("classpath:/static/images/logo/");
         registry
                 .addResourceHandler("/css/**")
                 .addResourceLocations("classpath:/static/css/");
@@ -189,6 +192,15 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         registry
                 .addResourceHandler("/js/**")
                 .addResourceLocations("classpath:/static/js/");
+        registry
+                .addResourceHandler("/images/avatar/**")
+                .addResourceLocations("file:" + uploadPath);
+    }
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver getResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSizePerFile(52428800);
+        return resolver;
     }
 
     @Override
