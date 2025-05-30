@@ -1,21 +1,30 @@
 package com.codegym.hospital.service.impl.user;
 
+import com.codegym.hospital.model.deparment.Departments;
 import com.codegym.hospital.model.user.Doctors;
 import com.codegym.hospital.model.user.Patients;
 import com.codegym.hospital.model.user.Role;
 import com.codegym.hospital.model.user.User;
 import com.codegym.hospital.repository.user.IRoleRepository;
 import com.codegym.hospital.repository.user.IUserRepository;
+import com.codegym.hospital.service.IDeparmentService;
 import com.codegym.hospital.service.IDoctorService;
 import com.codegym.hospital.service.IPatientService;
 import com.codegym.hospital.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -28,13 +37,15 @@ public class UserService implements IUserService {
     private IRoleRepository roleRepository;
 
     @Autowired
-    private IDoctorService doctorService;
-
-    @Autowired
     private IPatientService patientService;
 
     @Autowired
     private BCryptPasswordEncoder passEncoder;
+    @Autowired
+    private IDeparmentService deparmentService;
+    @Autowired
+    private IDoctorService doctorService;
+
     @Override
     public String registerUser(User user) {
         user.setPassword(passEncoder.encode(user.getPassword()));
@@ -96,9 +107,6 @@ public class UserService implements IUserService {
     @Override
     public void saveUser(User user) {
         userRepository.save(user);
-        if (user.getRole().getName().equals("DOCTOR")) {
-            doctorService.save(new Doctors(user));
-        }
     }
 
 
@@ -111,6 +119,57 @@ public class UserService implements IUserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    @Value("${upload_file}")
+    private String uploadPath;
+    @Override
+    public String uploadFile(MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            File dest = new File(uploadPath, fileName);
+            file.transferTo(dest);
+            return fileName;
+        }
+        return null;
+    }
+    public void createUserWithDetail(User user, Map<String, String> params, MultipartFile avatarFile) throws IOException {
+        saveUser(user);
+        if (user.getRole().getId() == 3){
+            Doctors doctor = new Doctors();
+            doctor.setUser(user);
+            doctor.setDegree(params.get("degree"));
+            doctor.setBio(params.get("bio"));
+
+//            Long departmentId = Long.valueOf(params.get("department"));
+//            Departments department = deparmentService.findById(departmentId);
+//            doctor.setDepartment(department);
+            user.setDoctorDetail(doctor);
+
+            if (avatarFile != null && !avatarFile.isEmpty()) {
+                String fileName = uploadFile(avatarFile);
+                doctor.setAvtPath(fileName);
+            }
+            System.out.println(doctor);
+
+            doctorService.save(doctor);
+        }
+        else if (user.getRole().getId() == 4) {
+            Patients patient = new Patients();
+            patient.setUser(user);
+            patient.setDateOfBirth(LocalDate.parse(params.get("dateOfBirth")));
+            patient.setAddress(params.get("address"));
+            user.setPatientDetail(patient);
+
+            if (avatarFile != null && !avatarFile.isEmpty()) {
+                String fileName = uploadFile(avatarFile);
+                patient.setAvtPath(fileName);
+            }
+            System.out.println(patient);
+
+            patientService.save(patient);
+        }
+    }
+
 
 
 }

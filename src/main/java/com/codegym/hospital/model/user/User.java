@@ -15,10 +15,16 @@ public class User {
     private String email;
     private String password;
     private String gender;
+    @Transient
+    private Doctors doctorDetail;
+
+    @Transient
+    private Patients patientDetail;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
 
 
     private String status;
@@ -60,6 +66,21 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public Doctors getDoctorDetail() {
+        return doctorDetail;
+    }
+
+    public void setDoctorDetail(Doctors doctorDetail) {
+        this.doctorDetail = doctorDetail;
+    }
+
+    public Patients getPatientDetail() {
+        return patientDetail;
+    }
+
+    public void setPatientDetail(Patients patientDetail) {
+        this.patientDetail = patientDetail;
+    }
 
     public String getGender() {
         return gender;

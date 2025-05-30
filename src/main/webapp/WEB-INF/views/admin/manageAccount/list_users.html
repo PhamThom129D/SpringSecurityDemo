@@ -46,14 +46,7 @@
                     <td th:text="${user.fullname}"></td>
                     <td th:text="${user.email}"></td>
                     <td th:text="${user.phonenumber}"></td>
-                    <td th:switch="${user.role.name}">
-                        <span th:case="'DOCTOR'">Bác sĩ</span>
-                        <span th:case="'RECEPTIONIST'">Nhân viên tiếp nhận</span>
-                        <span th:case="'PATIENT'">Bệnh nhân</span>
-                        <span th:case="'ADMIN'">Quản trị viên</span>
-                        <span th:case="*"><p th:text="${user.role.name}"></p></span>
-                    </td>
-
+                    <td th:text="${roleDisplay[user.role.name]} ?: ${user.role.name}"></td>
                     <td th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
                     <td th:text="${#temporals.format(user.updatedAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
                     <td>
