@@ -46,3 +46,18 @@ document.getElementById('avtPathDoctor').addEventListener('change', function () 
 document.getElementById('avtPathPatient').addEventListener('change', function () {
     previewImage(this, 'previewPatient');
 });
+
+
+function validatePassword() {
+    const passwordVal = password.value.trim();
+    const confirmVal = confirmPassword.value.trim();
+
+    if (passwordVal !== '' && confirmVal !== '') {
+        const isValid = confirmVal === passwordVal;
+        confirmMessage.classList.toggle('hidden', isValid);
+        return isValid;
+    } else {
+        confirmMessage.classList.add('hidden');
+        return true;
+    }
+}
