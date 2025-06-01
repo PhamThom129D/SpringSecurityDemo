@@ -84,15 +84,17 @@
                                class="text-yellow-600 hover:text-yellow-800 text-xl">
                                 <i class="fas fa-edit"></i>
                             </a>
+                            <form th:action="@{/manageAccount/toggleStatus/{id}(id=${user.id})}" method="post" class="toggle-status-form">
+                                <button type="submit"
+                                        th:data-status="${user.status}"
+                                        th:title="${user.status == 'active'} ? 'Khóa tài khoản' : 'Kích hoạt tài khoản'"
+                                        class="text-red-600 hover:text-red-800 text-xl">
+                                    <i class="fas"
+                                       th:classappend="${user.status == 'active'} ? ' fa-user-slash' : ' fa-user-check'"></i>
+                                </button>
+                            </form>
 
-                            <button type="button"
-                                    title="Chặn/Kích hoạt tài khoản"
-                                    th:data-id="${user.id}"
-                                    th:data-status="${user.status}"
-                                    class="text-red-600 hover:text-red-800 text-xl">
-                                <i class="fas"
-                                   th:classappend="${user.status == 'active'} ? ' fa-user-slash' : ' fa-user-check'"></i>
-                            </button>
+
                         </div>
                     </td>
 
@@ -107,9 +109,35 @@
     <div th:replace="admin/fragments/footer :: footer"></div>
 </footer>
 
+<div id="flash-success" th:if="${success}" th:data-msg="${success}" hidden></div>
+<div id="flash-error" th:if="${error}" th:data-msg="${error}" hidden></div>
+
+
 <script th:src="@{/js/admin/homeAdmin.js}"></script>
 <script th:src="@{/js/admin/dataTable.js}"></script>
 <script th:src="@{/js/auth/alert.js}"></script>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.toggle-status-form');
+
+        forms.forEach(form => {
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const button = form.querySelector('button');
+                const isActive = button.getAttribute('data-status') === 'active';
+
+                const title = isActive ? 'Khóa tài khoản này?' : 'Kích hoạt tài khoản này?';
+                const text = isActive ? 'Tài khoản sẽ bị vô hiệu hóa.' : 'Tài khoản sẽ được kích hoạt lại.';
+
+                const confirmed = await window.showConfirmation(title, text);
+                if (confirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

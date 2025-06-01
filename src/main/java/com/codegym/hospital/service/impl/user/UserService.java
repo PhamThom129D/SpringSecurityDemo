@@ -1,13 +1,11 @@
 package com.codegym.hospital.service.impl.user;
 
-import com.codegym.hospital.model.deparment.Departments;
 import com.codegym.hospital.model.user.Doctors;
 import com.codegym.hospital.model.user.Patients;
 import com.codegym.hospital.model.user.Role;
 import com.codegym.hospital.model.user.User;
 import com.codegym.hospital.repository.user.IRoleRepository;
 import com.codegym.hospital.repository.user.IUserRepository;
-import com.codegym.hospital.service.IDeparmentService;
 import com.codegym.hospital.service.IDoctorService;
 import com.codegym.hospital.service.IPatientService;
 import com.codegym.hospital.service.IUserService;
@@ -16,15 +14,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -41,8 +38,6 @@ public class UserService implements IUserService {
 
     @Autowired
     private BCryptPasswordEncoder passEncoder;
-    @Autowired
-    private IDeparmentService deparmentService;
     @Autowired
     private IDoctorService doctorService;
 
@@ -142,27 +137,82 @@ public class UserService implements IUserService {
         return null;
     }
 
-
     @Override
     public void createUserWithDetail(User user, MultipartFile avatarFile) throws IOException {
+        User existingUser = (user.getId() != null) ? userRepository.findById(user.getId()).orElse(null) : null;
+
         if (avatarFile != null && !avatarFile.isEmpty()) {
             String fileName = uploadFile(avatarFile);
             user.setAvtPath(fileName);
-        }else {
+        } else if (existingUser != null) {
+            user.setAvtPath(existingUser.getAvtPath());
+        } else {
             user.setAvtPath("avt_default.png");
         }
-        saveUser (user);
+
+        if (user.getId() == null) {
+            user.setPassword(passEncoder.encode(user.getPassword()));
+        } else if (existingUser != null) {
+            user.setPassword(existingUser.getPassword());
+        }
+
+        saveUser(user);
+
         if (user.getRole().getId() == 3) {
-            Doctors doctor = user.getDoctorDetail();
-            doctor.setUser(user);
-            user.setDoctorDetail(doctor);
-            doctorService.save(doctor);
+            Doctors detail = user.getDoctorDetail();
+            if (detail != null) {
+                detail.setUser(user);
+
+                if (user.getId() != null) {
+                    Doctors existingDetail = doctorService.findByUserID(user.getId());
+                    if (existingDetail != null) {
+                        detail.setId(existingDetail.getId());
+                    }
+                }
+
+                doctorService.save(detail);
+            }
+
         } else if (user.getRole().getId() == 4) {
-            Patients patient = user.getPatientDetail();
-            patient.setUser(user);
-            user.setPatientDetail(patient);
-            patientService.save(patient);
+            Patients detail = user.getPatientDetail();
+            if (detail != null) {
+                detail.setUser(user);
+
+                if (user.getId() != null) {
+                    Patients existingDetail = patientService.getPatientByUserId(user.getId());
+                    if (existingDetail != null) {
+                        detail.setId(existingDetail.getId());
+                    }
+                }
+
+                patientService.save(detail);
+            }
         }
     }
 
+
+
+    @Override
+    public User prepareUserForUpdate(Long id, Model model) {
+        Optional<User> optionalUser = getUserById(id);
+        if (optionalUser.isEmpty()) {
+            model.addAttribute("error", "Không tìm thấy người dùng!");
+            return null;
+        }
+
+        User user = optionalUser.get();
+
+        Doctors doctor = doctorService.findByUserID(user.getId());
+        if (doctor != null) {
+            user.setDoctorDetail(doctor);
+        }
+
+        Patients patient = patientService.getPatientByUserId(user.getId());
+        if (patient != null) {
+            user.setPatientDetail(patient);
+        }
+        return user;
+    }
+
 }
+

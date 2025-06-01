@@ -1,6 +1,7 @@
 package com.codegym.hospital.service;
 
 import com.codegym.hospital.model.user.User;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -19,4 +20,5 @@ public interface IUserService {
     void deleteUser(Long id);
     String uploadFile(MultipartFile file) throws IOException;
     void createUserWithDetail(User user, MultipartFile avatarFile) throws IOException;
+    User prepareUserForUpdate(Long id, Model model);
 }

@@ -8,6 +8,7 @@ import com.codegym.hospital.model.user.User;
 import com.codegym.hospital.service.*;
 import com.codegym.hospital.service.impl.user.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +37,9 @@ public class ManageAccountController {
     private IDeparmentService deparmentService;
     @Autowired
     private IDoctorService doctorService;
-    @Autowired
-    private IPatientService patientService;
 
 
-    @GetMapping("listUser")
+    @GetMapping("/listUser")
     public String showListUser(Model model) {
         List<User> userList = new ArrayList<>();
         userList.addAll(userService.getUserByStatus("inactive"));
@@ -47,7 +48,7 @@ public class ManageAccountController {
         model.addAttribute("users", userList);
         return "admin/manageAccount/list_users";
     }
-    @GetMapping("approveUser")
+    @GetMapping("/approveUser")
     public String test(Model model) {
         model.addAttribute("users", userService.getUserByStatus("pending"));
         return "admin/manageAccount/approve_users";
@@ -84,7 +85,7 @@ public class ManageAccountController {
         return ResponseEntity.ok("");
     }
 
-    @GetMapping("addUser")
+    @GetMapping("/addUser")
     public String showAddUserForm(Model model) {
         User user = new User();
         Doctors doctor = new Doctors(user);
@@ -103,34 +104,50 @@ public class ManageAccountController {
         try {
             userService.createUserWithDetail(user, user.getAvatarFile());
             redirectAttributes.addFlashAttribute("success", "Thêm người dùng thành công!");
-            return "redirect:/manageAccount/listUser ";
+            return "redirect:/manageAccount/listUser";
 
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Lỗi khi thêm người dùng");
-            return "redirect:/addUser ";
+            return "redirect:/addUser";
         }
     }
-    @GetMapping("updateUser/{id}")
+    @GetMapping("/updateUser/{id}")
     public String showUpdateUserForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<User> optionalUser = userService.getUserById(id);
-        User user = optionalUser.get();
-        Doctors doctor = doctorService.findByUserID(user.getId());
-//        Departments department = deparmentService.findById(doctor.getDepartment().getId());
-//        doctor.setDepartment(department);
-        model.addAttribute("departments", deparmentService.findAll());
-        Patients patient = patientService.getPatientByUserId(user.getId());
-        user.setDoctorDetail(doctor);
-        user.setPatientDetail(patient);
-        if (!optionalUser.isPresent()) {
-            redirectAttributes.addFlashAttribute("error", "Người dùng không tồn tại");
-            return "redirect:/users";
-        }
-        model.addAttribute("user", user);
         model.addAttribute("roleDisplay", roleService.getRoleDisplayNames());
-        System.out.println(user);
+        model.addAttribute("user", userService.prepareUserForUpdate(id, model));
+        model.addAttribute("departments", deparmentService.findAll());
         return "admin/manageAccount/edit_user";
     }
 
-}
+    @PostMapping("/updateUser")
+    public String showUpdateUserForm(@ModelAttribute User user, RedirectAttributes redirectAttributes) throws IOException {
+        userService.createUserWithDetail(user, user.getAvatarFile());
+        redirectAttributes.addFlashAttribute("success", "Cập nhật thông tin người dùng thành công!");
+        return "redirect:/manageAccount/listUser";
+    }
+    @GetMapping("/viewUser/{id}")
+    public String showViewUserForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        model.addAttribute("roleDisplay", roleService.getRoleDisplayNames());
+        model.addAttribute("user", userService.prepareUserForUpdate(id, model));
+        model.addAttribute("departments", deparmentService.findAll());
+        return "admin/manageAccount/view_user";
+    }
+    @PostMapping("/toggleStatus/{id}")
+    public String toggleUserStatus(@PathVariable Long id,RedirectAttributes redirectAttributes) {
+        User user = userService.getUserById(id).get();
+        if (user != null) {
+            if ("active".equals(user.getStatus())) {
+                user.setStatus("inactive");
+                redirectAttributes.addFlashAttribute("success", "Khoá tài khoản người dùng thành công!");
+            } else {
+                user.setStatus("active");
+                redirectAttributes.addFlashAttribute("success", "Kích hoạt tài khoản người dùng thành công!");
+            }
+            userService.saveUser(user);
+        }
+        return "redirect:/manageAccount/listUser";
+    }
 
+
+}

@@ -34,9 +34,10 @@
                     Cập nhật thông tin người dùng
                 </h1>
             </div>
-            <form id="userForm" action="#" autocomplete="off" class="flex flex-col lg:flex-row gap-8" method="POST"
+            <form id="userForm" th:action="@{/manageAccount/updateUser}" autocomplete="off" class="flex flex-col lg:flex-row gap-8" method="POST"
                   novalidate="" th:object="${user}" enctype="multipart/form-data">
                 <div class="flex-1 space-y-6">
+                    <input th:field="*{id}" type="hidden">
                     <div>
                         <label class="block text-gray-700 font-medium mb-1" for="fullname">
                             Họ và tên
@@ -55,15 +56,6 @@
                                id="phonenumber" name="phonenumber" pattern="^\+?\d{9,15}$"
                                placeholder="Nhập số điện thoại (ví dụ: +84901234567)" required="" type="tel"
                                th:field="*{phonenumber}"/>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1" for="password">
-                            Mật khẩu
-                            <span class="text-red-500">*</span>
-                        </label>
-                        <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               id="password" minlength="6" name="password" placeholder="Nhập mật khẩu" required=""
-                               type="password" th:field="*{password}"/>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium mb-1" for="email">
@@ -116,7 +108,6 @@
                             <option value="blocked">Khóa tài khoản</option>
                         </select>
                     </div>
-
                 </div>
                 <div th:include="/admin/fragments/user_detail :: detail"> Thông tin chi tiết</div>
             </form>

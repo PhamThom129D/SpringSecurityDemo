@@ -24,10 +24,11 @@
         <label class="cursor-pointer bg-blue-600 text-white font-semibold px-6 py-3 rounded-md hover:bg-blue-700 transition-colors select-none text-center block mx-auto w-fit" for="avtPath">
             Chọn ảnh
         </label>
-
-        <input accept="image/*" class="hidden" id="avtPath" name="avatarFile"
-               type="file" th:field="*{avatarFile}" />
+        <input accept="image/*" class="hidden" id="avtPath" name="avatarFile" type="file" th:field="*{avatarFile}" />
     </div>
+
+    <div id="flash-success" th:if="${success}" th:data-msg="${success}" hidden></div>
+    <div id="flash-error" th:if="${error}" th:data-msg="${error}" hidden></div>
 
     <div class="hidden space-y-5" id="patient-details">
         <div>
