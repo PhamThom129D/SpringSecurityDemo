@@ -112,25 +112,14 @@
         </p>
     </form>
 </div>
+<script th:src="@{/js/admin/manageUser.js}"></script>
+
 <script>
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirmPassword');
     const confirmMessage = document.getElementById('confirmMessage');
     const form = document.querySelector('form[aria-label="Registration Form"]');
 
-    function validatePassword() {
-        const passwordVal = password.value.trim();
-        const confirmVal = confirmPassword.value.trim();
-
-        if (passwordVal !== '' && confirmVal !== '') {
-            const isValid = confirmVal === passwordVal;
-            confirmMessage.classList.toggle('hidden', isValid);
-            return isValid;
-        } else {
-            confirmMessage.classList.add('hidden');
-            return true;
-        }
-    }
 
     password.addEventListener('input', validatePassword);
     confirmPassword.addEventListener('input', validatePassword);

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <title>Danh sách tài khoản</title>
+    <link th:href="@{/css/homeAdmin.css}" rel="stylesheet">
+    <link th:href="@{/css/dataTable.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script th:src="@{/js/alert.js}"></script>
+</head>
+<body class="bg-[#d3e4f5] min-h-screen overflow-y-auto">
+<!-- Include header fragment -->
+<div th:replace="admin/fragments/sidebar :: sidebar"></div>
+<div th:replace="admin/fragments/header :: header"></div>
+
+
+<div class="flex">
+    <!-- Sidebar -->
+
+    <main class="flex-1 p-8 w-[80%] justify-end">
+        <section class="p-4 md:p-6 flex flex-col gap-6 max-w-7xl w-full flex-grow bg-blue-50">
+            <main class="flex-grow p-6 w-full max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-[24rem]">
+                    <section
+                            class="bg-white rounded-lg shadow p-6 flex flex-col items-center text-center space-y-8 w-[20rem]">
+                        <div>
+                            <img alt="Ảnh đại diện" class="w-48 h-48 rounded-full object-contain mb-4"
+                                 th:src="@{'/images/avatar/' + ${user.avtPath}}"/>
+
+                            <h2 class="text-3xl font-semibold text-gray-900 mb-1" th:text="${user.fullname}">Họ tên</h2>
+
+                            <p class="text-indigo-600 font-medium mb-3" th:text="${roleDisplay[user.role.name]}"> Vai
+                                trò</p>
+
+                            <p class="flex items-center gap-3">
+                                <i class="fas fa-envelope text-indigo-500"></i>
+                                <span th:text="${user.email}">Email</span>
+                            </p>
+
+                            <p class="flex items-center gap-3">
+                                <i class="fas fa-phone-alt text-indigo-500"></i>
+                                <span th:text="${user.phonenumber}">SĐT</span>
+                            </p>
+
+                        </div>
+
+                        <!-- Update Password Button -->
+                        <button id="openChangePasswordBtn"
+                                class="w-full max-w-xs bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition flex items-center justify-center space-x-3">
+                            <i class="fas fa-key text-lg"></i>
+                            <span class="font-semibold">Đổi mật khẩu</span>
+                        </button>
+
+                        <!-- Lock Account Button -->
+                        <form th:action="@{/accountInfo/toggleStatus}"
+                              method="post" class="toggle-status-form">
+                            <button id="lockAccountBtn" type="submit"
+                                    class="w-full max-w-xs bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition flex items-center justify-center space-x-3">
+                                <i class="fas fa-lock text-lg"></i>
+                                <span class="font-semibold">Khoá tài khoản</span>
+                            </button>
+                        </form>
+                    </section>
+
+                    <!-- Update Account Form -->
+                    <div class="md:[grid-column:span_3/span_2] flex flex-col space-y-8">
+                        <section class="w-[42rem] bg-white rounded-lg shadow p-6">
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-6 border-b border-gray-200 pb-2">Cập nhật
+                                tài khoản</h3>
+                            <form enctype="multipart/form-data" class="space-y-6 max-w-xl"
+                                  th:action="@{/accountInfo/adminInfo}" id="updateAccountForm" th:object="${user}"
+                                  method="post">
+                                <input type="hidden" th:field="*{id}">
+                                <input type="hidden" th:field="*{role.id}">
+                                <input type="hidden" th:field="*{gender}">
+                                <input type="hidden" th:field="*{status}">
+                                <div class="mb-6 items-center">
+                                    <label class="block text-gray-700 font-medium mb-1" for="avtPath">
+                                        Ảnh đại diện
+                                    </label>
+
+                                    <div class="mt-3 mb-6" th:with="avatar=*{avtPath}">
+                                        <img alt="Ảnh đại diện" id="preview"
+                                             class="mx-auto rounded-md border border-transparent max-h-48 object-contain"
+                                             width="400" height="300"
+                                             th:if="${avatar != null and avatar != ''}"
+                                             th:src="@{'/images/avatar/' + ${avatar}}"/>
+
+                                        <img alt="Ảnh đại diện mặc định"
+                                             class="mx-auto rounded-md border border-transparent max-h-48 object-contain"
+                                             width="400" height="300"
+                                             th:unless="${avatar != null and avatar != ''}"
+                                             th:src="@{'/images/avatar/avt_default.gif'}"/>
+                                    </div>
+                                    <label class="cursor-pointer bg-blue-600 text-white font-semibold px-6 py-3 rounded-md hover:bg-blue-700 transition-colors select-none text-center block mx-auto w-fit"
+                                           for="avtPath">
+                                        Chọn ảnh
+                                    </label>
+                                    <input accept="image/*" class="hidden" id="avtPath" name="avatarFile" type="file"
+                                           th:field="*{avatarFile}"/>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="fullName">Họ và tên</label>
+                                    <input class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                           id="fullName" name="fullName" required type="text" th:field="*{fullname}"/>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
+                                    <input class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                           id="email" name="email" required type="email" th:field="*{email}"/>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="phone">Số điện
+                                        thoại</label>
+                                    <input class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                           id="phone" name="phone" required type="tel" th:field="*{phonenumber}"/>
+                                </div>
+                                <button class="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition w-full md:w-auto"
+                                        form="updateAccountForm" type="submit">Cập nhật
+                                </button>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Change Password Modal -->
+            <div id="changePasswordModal"
+                 class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+                    <button id="closeModalBtn"
+                            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none"
+                            aria-label="Đóng cửa sổ">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6 border-b border-gray-200 pb-2">Đổi mật
+                        khẩu</h3>
+                    <form class="space-y-6" id="changePasswordFormModal" th:action="@{/accountInfo/changePass}"
+                          method="post">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2" for="currentPasswordModal">Mật khẩu hiện
+                                tại</label>
+                            <input class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                   id="currentPasswordModal" name="currentPasswordModal"
+                                   placeholder="Nhập mật khẩu hiện tại" required type="password"/>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2" for="password">Mật khẩu mới</label>
+                            <input class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                   id="password" minlength="8" name="newPasswordModal" placeholder="Nhập mật khẩu mới"
+                                   required type="password"/>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2" for="confirmPassword">Xác nhận mật khẩu
+                                mới</label>
+                            <input class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                   id="confirmPassword" minlength="8" name="confirmPasswordModal"
+                                   placeholder="Nhập lại mật khẩu mới" required type="password"/>
+                            <p id="confirmMessage" class="text-red-600 text-xs mx-auto mb-2 hidden">Mật khẩu không
+                                khớp</p>
+                        </div>
+                        <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                            <button type="button" id="cancelModalBtn"
+                                    class="px-5 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 transition focus:outline-none">
+                                Huỷ
+                            </button>
+                            <button type="submit"
+                                    class="bg-indigo-600 text-white px-5 py-2 rounded-md hover:bg-indigo-700 transition focus:outline-none">
+                                Lưu mật khẩu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+<footer class="w-full bg-white shadow mt-auto">
+    <div th:replace="admin/fragments/footer :: footer"></div>
+</footer>
+
+<div id="flash-success" th:if="${success}" th:data-msg="${success}" hidden></div>
+<div id="flash-error" th:if="${error}" th:data-msg="${error}" hidden></div>
+
+
+<script th:src="@{/js/admin/homeAdmin.js}"></script>
+<script th:src="@{/js/admin/dataTable.js}"></script>
+<script th:src="@{/js/auth/alert.js}"></script>
+<script th:if="${showChangePassModal}">
+    window.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('changePasswordModal');
+        modal.classList.remove('hidden'); // 👈 hiện modal
+    });
+</script>
+
+<script th:inline="javascript">
+
+
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    const openChangePasswordBtn = document.getElementById('openChangePasswordBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const changePasswordFormModal = document.getElementById('changePasswordFormModal');
+
+    // Open change password modal
+    openChangePasswordBtn.addEventListener('click', () => {
+        changePasswordModal.classList.remove('hidden');
+    });
+
+    // Close modal function
+    function closeModal() {
+        changePasswordModal.classList.add('hidden');
+        changePasswordFormModal.reset();
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelModalBtn.addEventListener('click', closeModal);
+
+    changePasswordFormModal.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const confirmMessage = document.getElementById('confirmMessage');
+
+        if (password.value !== confirmPassword.value) {
+            confirmMessage.classList.remove('hidden');
+            return;
+        } else {
+            confirmMessage.classList.add('hidden');
+        }
+        this.submit();
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.toggle-status-form');
+
+        forms.forEach(form => {
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const confirmed = await window.showConfirmation('Khóa tài khoản này?', 'Tài khoản sẽ bị vô hiệu hóa.');
+                if (confirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+
+    function previewImage(inputId, imgId) {
+        const input = document.getElementById(inputId);
+        const img = document.getElementById(imgId);
+
+        input.addEventListener('change', function () {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    previewImage('avtPath', 'preview');
+</script>
+</body>
+</html>
