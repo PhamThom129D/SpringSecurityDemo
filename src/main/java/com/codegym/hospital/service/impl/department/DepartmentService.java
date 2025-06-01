@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DepartmentService implements IDeparmentService {
@@ -21,4 +22,16 @@ public class DepartmentService implements IDeparmentService {
     public List<Departments> findAll() {
         return departmentRepository.findAll();
     }
+
+    @Override
+    public void save(Departments department) {
+        departmentRepository.save(department);
+    }
+    @Override
+    public boolean existsByName(String name) {
+        return departmentRepository.existsByName(name);
+    }
+
+
+
 }

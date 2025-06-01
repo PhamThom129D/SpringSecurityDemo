@@ -1,24 +1,18 @@
-package com.codegym.hospital.controller.user;
+package com.codegym.hospital.controller.admin;
 
 
-import com.codegym.hospital.model.deparment.Departments;
 import com.codegym.hospital.model.user.Doctors;
 import com.codegym.hospital.model.user.Patients;
 import com.codegym.hospital.model.user.User;
 import com.codegym.hospital.service.*;
-import com.codegym.hospital.service.impl.user.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

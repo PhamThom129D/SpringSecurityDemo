@@ -16,6 +16,7 @@ public class Departments {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+    private String status="active";
 
     public Departments() {
     }
@@ -23,6 +24,12 @@ public class Departments {
     public Departments(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Departments(String description, String name, String status) {
+        this.description = description;
+        this.name = name;
+        this.status = status;
     }
 
     public String getDescription() {
@@ -47,6 +54,14 @@ public class Departments {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
