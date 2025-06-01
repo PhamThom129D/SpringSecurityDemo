@@ -7,4 +7,6 @@ import java.util.List;
 public interface IDeparmentService {
     Departments findById(Long id);
     List<Departments> findAll();
+    void save(Departments department);
+    boolean existsByName(String name);
 }
