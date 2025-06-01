@@ -30,11 +30,6 @@ public class Doctors {
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean status = true;
 
-    @Column(name = "avt_path", length = 10000)
-    private String avtPath;
-
-    @Transient
-    private MultipartFile avatarFile;
 
     public Doctors() {
     }
@@ -43,41 +38,16 @@ public class Doctors {
         this.user = user;
     }
 
-    public Doctors(Integer id, User user, String degree, String bio, Departments department, Boolean status, String avtPath) {
+
+    public Doctors(Integer id, User user, String degree, String bio, Departments department, Boolean status) {
         this.id = id;
         this.user = user;
         this.degree = degree;
         this.bio = bio;
         this.department = department;
         this.status = status;
-        this.avtPath = avtPath;
     }
 
-    public Doctors(Integer id, User user, String degree, String bio, Departments department, Boolean status, MultipartFile avatarFile) {
-        this.id = id;
-        this.user = user;
-        this.degree = degree;
-        this.bio = bio;
-        this.department = department;
-        this.status = status;
-        this.avatarFile = avatarFile;
-    }
-
-    public MultipartFile getAvatarFile() {
-        return avatarFile;
-    }
-
-    public void setAvatarFile(MultipartFile avatarFile) {
-        this.avatarFile = avatarFile;
-    }
-
-    public String getAvtPath() {
-        return avtPath;
-    }
-
-    public void setAvtPath(String avtPath) {
-        this.avtPath = avtPath;
-    }
 
     public String getBio() {
         return bio;
@@ -130,14 +100,12 @@ public class Doctors {
     @Override
     public String toString() {
         return "Doctors{" +
-                "avatarFile=" + avatarFile +
                 ", id=" + id +
                 ", user=" + user +
                 ", degree='" + degree + '\'' +
                 ", bio='" + bio + '\'' +
                 ", department=" + department +
                 ", status=" + status +
-                ", avtPath='" + avtPath + '\'' +
                 '}';
     }
 }

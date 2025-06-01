@@ -32,11 +32,6 @@
                 <h1 class="text-3xl font-bold text-gray-800">
                     Thêm mới người dùng
                 </h1>
-                <a class="text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-2" href="/users">
-                    <i class="fas fa-arrow-left">
-                    </i>
-                    Quay lại danh sách
-                </a>
             </div>
             <form id="userForm" th:action="@{/manageAccount/addUser}" th:object="${user}" method="POST" enctype="multipart/form-data"
                   autocomplete="off" novalidate class="flex flex-col lg:flex-row gap-8">
@@ -57,7 +52,7 @@
                         </label>
                         <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                id="phonenumber" name="phonenumber" pattern="^\+?\d{9,15}$" th:field="*{phonenumber}"
-                               placeholder="Nhập số điện thoại (ví dụ: +84901234567)" required="" type="tel"/>
+                               placeholder="Nhập số điện thoại" required="" type="tel"/>
                     </div>
                     <div>
                         <label class="block text-gray-700 font-medium mb-1" for="password">
@@ -126,95 +121,7 @@
                         </select>
                     </div>
                 </div>
-                <div th:fragment="detail" class="flex-1 bg-gray-50 border border-gray-300 rounded-lg p-6">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 text-center">
-                        Thông Tin Chi Tiết
-                    </h2>
-                    <div class="hidden space-y-5" id="doctor-details">
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="degree">
-                                Bằng cấp
-                            </label>
-                            <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                   id="degree" name="degree" placeholder="Nhập bằng cấp" type="text" th:field="*{doctorDetail.degree}"/>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="bio">
-                                Tiểu sử
-                            </label>
-                            <textarea
-                                    class="w-full border border-gray-300 rounded-md px-4 py-2 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="bio" name="bio" placeholder="Nhập tiểu sử" rows="4" th:field="*{doctorDetail.bio}"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="department">
-                                Khoa
-                            </label>
-                            <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="department" name="department" th:field="*{doctorDetail.department.id}">
-                                <option selected="" value="">Chọn khoa</option>
-                                <option th:each="dept : ${departments}"
-                                        th:value="${dept.id}"
-                                        th:text="${dept.name}">
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="avtPathDoctor">
-                                Ảnh đại diện
-                            </label>
-                            <input accept="image/*" class="w-full text-gray-700" id="avtPathDoctor" name="avatarDoctorFile"
-                                   type="file" th:field="*{doctorDetail.avatarFile}"/>
-                            <div class="mt-3">
-                                <img alt="Ảnh đại diện bác sĩ xem trước"
-                                     class="mx-auto rounded-md border border-gray-300 max-h-48 object-contain"
-                                     height="300" id="previewDoctor"
-                                     th:src="@{'/images/avatar/' + *{doctorDetail.avtPath}}"
-                                     width="400"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hidden space-y-5" id="patient-details">
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="dateOfBirth">
-                                Ngày sinh
-                            </label>
-                            <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                   id="dateOfBirth" name="dateOfBirth" type="date" th:field="*{patientDetail.dateOfBirth}"/>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="address">
-                                Địa chỉ
-                            </label>
-                            <textarea
-                                    class="w-full border border-gray-300 rounded-md px-4 py-2 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    id="address" name="address" placeholder="Nhập địa chỉ" rows="3" th:field="*{patientDetail.address}"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-medium mb-1" for="avtPathPatient">
-                                Ảnh đại diện
-                            </label>
-                            <input accept="image/*" class="w-full text-gray-700" id="avtPathPatient" name="avatarPatientFile"
-                                   type="file" th:field="*{patientDetail.avatarFile}"/>
-                            <div class="mt-3">
-                                <img alt="Ảnh đại diện bệnh nhân xem trước"
-                                     class="mx-auto rounded-md border border-gray-300 max-h-48 object-contain"
-                                     height="300" id="previewPatient"
-                                     th:src="@{'/images/avatar/' + *{patientDetail.avtPath}}"
-                                     width="400"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="hidden text-center text-gray-500 mt-10" id="other-details">
-                        <p>
-                            Không có thông tin chi tiết cho vai trò này.
-                        </p>
-                        <img alt="Hình ảnh minh họa không có thông tin chi tiết cho vai trò này"
-                             class="mx-auto mt-4 rounded-md border border-gray-300 max-h-48 object-contain" height="300"
-                             src="https://storage.googleapis.com/a1aa/image/a66e154b-c82f-441c-3170-e786634c7fb1.jpg"
-                             width="400"/>
-                    </div>
-                </div>
+               <div th:include="/admin/fragments/user_detail :: detail"> Thông tin chi tiết</div>
             </form>
             <div class="flex justify-end gap-4 mt-6">
                 <button class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
@@ -234,7 +141,9 @@
 </footer>
 <script th:src="@{/js/admin/homeAdmin.js}"></script>
 <script>
-    const avtPath = document.getElementById("avtPathDoctor")
+    const avtPath = document.getElementById("avtPathDoctor");
+    const dateOfBirth = document.getElementById("dateOfBirth").value;
+    const address = document.getElementById("address").value;
     const roleSelect = document.getElementById('role_id');
     const doctorDetails = document.getElementById('doctor-details');
     const patientDetails = document.getElementById('patient-details');
@@ -274,9 +183,7 @@
         });
     }
 
-    previewImage('avtPathDoctor', 'previewDoctor');
-    previewImage('avtPathPatient', 'previewPatient');
-    console.log(avtPath);
+    previewImage('avtPath', 'preview');
 </script>
 </body>
 </html>

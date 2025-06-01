@@ -1,15 +1,12 @@
 package com.codegym.hospital.controller.user;
 
+
 import com.codegym.hospital.model.deparment.Departments;
 import com.codegym.hospital.model.user.Doctors;
 import com.codegym.hospital.model.user.Patients;
 import com.codegym.hospital.model.user.User;
-import com.codegym.hospital.service.IDeparmentService;
-import com.codegym.hospital.service.IEmailService;
-import com.codegym.hospital.service.IRoleService;
-import com.codegym.hospital.service.IUserService;
+import com.codegym.hospital.service.*;
 import com.codegym.hospital.service.impl.user.DoctorService;
-import com.codegym.hospital.service.impl.user.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,11 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +32,10 @@ public class ManageAccountController {
     private IRoleService roleService;
     @Autowired
     private IDeparmentService deparmentService;
+    @Autowired
+    private IDoctorService doctorService;
+    @Autowired
+    private IPatientService patientService;
 
 
     @GetMapping("listUser")
@@ -74,6 +70,7 @@ public class ManageAccountController {
             user.setStatus("active");
             emailService.sendApprovalNotificationEmail(user.getEmail());
             userService.saveUser(user);
+            doctorService.save(new Doctors(user));
         } else if (action.equals("reject")) {
             String reason = (payload != null && payload.get("reason") != null)
                     ? payload.get("reason")
@@ -90,6 +87,10 @@ public class ManageAccountController {
     @GetMapping("addUser")
     public String showAddUserForm(Model model) {
         User user = new User();
+        Doctors doctor = new Doctors(user);
+        Patients patient = new Patients(user);
+        user.setDoctorDetail(doctor);
+        user.setPatientDetail(patient);
         model.addAttribute("user", user);
         model.addAttribute("roles", roleService.findAllRoles());
         model.addAttribute("roleDisplay", roleService.getRoleDisplayNames());
@@ -97,46 +98,35 @@ public class ManageAccountController {
         return "admin/manageAccount/add_new_user";
     }
     @PostMapping("/addUser")
-    public String addUser(@ModelAttribute User user,
-                          @RequestParam Map<String, String> params,
-                          @RequestParam(value = "avatarDoctorFile", required = false) MultipartFile avatarDoctorFile,
-                          @RequestParam(value = "avatarPatientFile", required = false) MultipartFile avatarPatientFile,
-                          RedirectAttributes redirectAttributes , HttpSession session) {
+    public String addUser (@ModelAttribute User user,
+                           RedirectAttributes redirectAttributes) {
         try {
-            User user1 = (User) session.getAttribute("loggedInUser");
-            System.out.println(user1);
-            MultipartFile avatarFile = null;
-            if (user.getRole().getId() == 3) {
-                avatarFile = avatarDoctorFile;
-            } else if (user.getRole().getId() == 4) {
-                avatarFile = avatarPatientFile;
-            }
-
-            userService.createUserWithDetail(user, params, avatarFile);
-
+            userService.createUserWithDetail(user, user.getAvatarFile());
             redirectAttributes.addFlashAttribute("success", "Thêm người dùng thành công!");
-            return "redirect:/manageAccount/listUser";
+            return "redirect:/manageAccount/listUser ";
 
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Lỗi khi thêm người dùng");
-            return "redirect:/addUser";
+            return "redirect:/addUser ";
         }
     }
-
-
-
-
     @GetMapping("updateUser/{id}")
     public String showUpdateUserForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<User> optionalUser = userService.getUserById(id);
+        User user = optionalUser.get();
+        Doctors doctor = doctorService.findByUserID(user.getId());
+//        Departments department = deparmentService.findById(doctor.getDepartment().getId());
+//        doctor.setDepartment(department);
+        model.addAttribute("departments", deparmentService.findAll());
+        Patients patient = patientService.getPatientByUserId(user.getId());
+        user.setDoctorDetail(doctor);
+        user.setPatientDetail(patient);
         if (!optionalUser.isPresent()) {
             redirectAttributes.addFlashAttribute("error", "Người dùng không tồn tại");
             return "redirect:/users";
         }
-        User user = optionalUser.get();
         model.addAttribute("user", user);
-        model.addAttribute("roles", roleService.findAllRoles());
         model.addAttribute("roleDisplay", roleService.getRoleDisplayNames());
         System.out.println(user);
         return "admin/manageAccount/edit_user";

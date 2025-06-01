@@ -122,54 +122,47 @@ public class UserService implements IUserService {
 
     @Value("${upload_file}")
     private String uploadPath;
-    @Override
+
     public String uploadFile(MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            File dest = new File(uploadPath, fileName);
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+            File dest = new File(uploadPath, originalFileName);
+            if (dest.exists()) {
+                return originalFileName;
+            }
+
             file.transferTo(dest);
-            return fileName;
+            return originalFileName;
         }
         return null;
     }
-    public void createUserWithDetail(User user, Map<String, String> params, MultipartFile avatarFile) throws IOException {
-        saveUser(user);
-        if (user.getRole().getId() == 3){
-            Doctors doctor = new Doctors();
-            doctor.setUser(user);
-            doctor.setDegree(params.get("degree"));
-            doctor.setBio(params.get("bio"));
 
-//            Long departmentId = Long.valueOf(params.get("department"));
-//            Departments department = deparmentService.findById(departmentId);
-//            doctor.setDepartment(department);
-            user.setDoctorDetail(doctor);
 
-            if (avatarFile != null && !avatarFile.isEmpty()) {
-                String fileName = uploadFile(avatarFile);
-                doctor.setAvtPath(fileName);
-            }
-            System.out.println(doctor);
-
-            doctorService.save(doctor);
+    @Override
+    public void createUserWithDetail(User user, MultipartFile avatarFile) throws IOException {
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            String fileName = uploadFile(avatarFile);
+            user.setAvtPath(fileName);
+        }else {
+            user.setAvtPath("avt_default.png");
         }
-        else if (user.getRole().getId() == 4) {
-            Patients patient = new Patients();
+        saveUser (user);
+        if (user.getRole().getId() == 3) {
+            Doctors doctor = user.getDoctorDetail();
+            doctor.setUser(user);
+            user.setDoctorDetail(doctor);
+            doctorService.save(doctor);
+        } else if (user.getRole().getId() == 4) {
+            Patients patient = user.getPatientDetail();
             patient.setUser(user);
-            patient.setDateOfBirth(LocalDate.parse(params.get("dateOfBirth")));
-            patient.setAddress(params.get("address"));
             user.setPatientDetail(patient);
-
-            if (avatarFile != null && !avatarFile.isEmpty()) {
-                String fileName = uploadFile(avatarFile);
-                patient.setAvtPath(fileName);
-            }
-            System.out.println(patient);
-
             patientService.save(patient);
         }
     }
-
-
 
 }

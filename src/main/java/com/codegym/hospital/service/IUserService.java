@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface IUserService {
@@ -19,5 +18,5 @@ public interface IUserService {
     Optional<User> getUserById(Long id);
     void deleteUser(Long id);
     String uploadFile(MultipartFile file) throws IOException;
-    void createUserWithDetail(User user, Map<String, String> params, MultipartFile avatarFile) throws IOException;
+    void createUserWithDetail(User user, MultipartFile avatarFile) throws IOException;
 }
