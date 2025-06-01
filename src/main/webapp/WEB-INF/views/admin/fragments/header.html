@@ -72,8 +72,9 @@
                             width="40"
                     />
                     <span class="hidden md:inline font-semibold text-black">
-                        <span th:text="${session.loggedInUser.fullname}">Admin</span>
+                          <span th:if="${session.loggedInUser != null}" th:text="${session.loggedInUser.fullname}">Admin</span>
                     </span>
+
 
                     <i class="fas fa-chevron-down text-gray-600"></i>
                 </button>

@@ -66,3 +66,18 @@ window.confirmAndHandle = async function(title, text, path, msg) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    const successEl = document.getElementById("flash-success");
+    const errorEl = document.getElementById("flash-error");
+
+    if (successEl) {
+        const msg = successEl.getAttribute("data-msg");
+        if (msg) window.showSuccess(msg);
+    }
+
+    if (errorEl) {
+        const msg = errorEl.getAttribute("data-msg");
+        if (msg) window.showError(msg);
+    }
+});
+

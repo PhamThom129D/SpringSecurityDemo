@@ -6,10 +6,21 @@ import com.codegym.hospital.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 @Service
+@Transactional
 public class PatientService implements IPatientService {
     @Autowired
     public IPatientRepository patientRepository;
+
+    @Override
+    public Patients getPatientByUserId(Long userId) {
+        return patientRepository.findByUserId(userId);
+    }
+
+    @Override
+    public void save(Patients patient) {
+        patientRepository.save(patient);
+    }
 }

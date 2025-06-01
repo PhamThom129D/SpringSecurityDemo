@@ -9,7 +9,7 @@ public class Departments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 100, nullable = false, unique = true)
     private String name;
@@ -20,8 +20,7 @@ public class Departments {
     public Departments() {
     }
 
-    public Departments(Integer id, String name, String description) {
-        this.id = id;
+    public Departments(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -34,11 +33,11 @@ public class Departments {
         this.description = description;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

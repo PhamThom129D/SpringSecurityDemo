@@ -3,6 +3,8 @@
   <component name="WebContextManager">
     <option name="state">
       <map>
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/manageAccount/add_new_user.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/manageAccount" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/manageAccount/list_users.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/admin/manageAccount" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/authenticate/otp.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/authenticate" />
       </map>
     </option>

@@ -1,5 +1,7 @@
 package com.codegym.hospital.model.user;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -15,10 +17,20 @@ public class User {
     private String email;
     private String password;
     private String gender;
+    @Column(name = "avt_path", length = 10000)
+    private String avtPath = "avt_default.gif";
+    @Transient
+    private Doctors doctorDetail;
+
+    @Transient
+    private Patients patientDetail;
+    @Transient
+    private MultipartFile avatarFile;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
 
 
     private String status;
@@ -47,19 +59,55 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String fullname, String phonenumber, String email, String password, String gender, Role role, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.fullname = fullname;
-        this.phonenumber = phonenumber;
+    public User(MultipartFile avatarFile, String avtPath, LocalDateTime createdAt, Doctors doctorDetail, String email, String fullname, String gender, Long id, String password, Patients patientDetail, String phonenumber, Role role, String status, LocalDateTime updatedAt) {
+        this.avatarFile = avatarFile;
+        this.avtPath = avtPath;
+        this.createdAt = createdAt;
+        this.doctorDetail = doctorDetail;
         this.email = email;
-        this.password = password;
+        this.fullname = fullname;
         this.gender = gender;
+        this.id = id;
+        this.password = password;
+        this.patientDetail = patientDetail;
+        this.phonenumber = phonenumber;
         this.role = role;
         this.status = status;
-        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
+
+    public MultipartFile getAvatarFile() {
+        return avatarFile;
+    }
+
+    public void setAvatarFile(MultipartFile avatarFile) {
+        this.avatarFile = avatarFile;
+    }
+
+    public String getAvtPath() {
+        return avtPath;
+    }
+
+    public void setAvtPath(String avtPath) {
+        this.avtPath = avtPath;
+    }
+
+    public Doctors getDoctorDetail() {
+        return doctorDetail;
+    }
+
+    public void setDoctorDetail(Doctors doctorDetail) {
+        this.doctorDetail = doctorDetail;
+    }
+
+    public Patients getPatientDetail() {
+        return patientDetail;
+    }
+
+    public void setPatientDetail(Patients patientDetail) {
+        this.patientDetail = patientDetail;
+    }
 
     public String getGender() {
         return gender;

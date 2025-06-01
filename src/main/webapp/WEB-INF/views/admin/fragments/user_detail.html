@@ -1,0 +1,91 @@
+<div th:fragment="detail" class="flex-1 bg-gray-50 border border-gray-300 rounded-lg p-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800 text-center">
+        Thông Tin Chi Tiết
+    </h2>
+
+    <div class="mb-6 items-center">
+        <label class="block text-gray-700 font-medium mb-1" for="avtPath">
+            Ảnh đại diện
+        </label>
+
+        <div class="mt-3 mb-6" th:with="avatar=*{avtPath}">
+            <img alt="Ảnh đại diện" id="preview" for="avtPath"
+                    class="mx-auto rounded-md border border-transparent max-h-48 object-contain"
+                    width="400" height="300"
+                    th:if="${avatar != null and avatar != ''}"
+                    th:src="@{'/images/avatar/' + ${avatar}}" />
+
+            <img alt="Ảnh đại diện mặc định"
+                 class="mx-auto rounded-md border border-transparent max-h-48 object-contain"
+                 width="400" height="300"
+                 th:unless="${avatar != null and avatar != ''}"
+                 th:src="@{'/images/avatar/avt_default.gif'}" />
+        </div>
+        <label class="cursor-pointer bg-blue-600 text-white font-semibold px-6 py-3 rounded-md hover:bg-blue-700 transition-colors select-none text-center block mx-auto w-fit" for="avtPath">
+            Chọn ảnh
+        </label>
+        <input accept="image/*" class="hidden" id="avtPath" name="avatarFile" type="file" th:field="*{avatarFile}" />
+    </div>
+
+    <div id="flash-success" th:if="${success}" th:data-msg="${success}" hidden></div>
+    <div id="flash-error" th:if="${error}" th:data-msg="${error}" hidden></div>
+
+    <div class="hidden space-y-5" id="patient-details">
+        <div>
+            <label class="block text-gray-700 font-medium mb-1" for="dateOfBirth">
+                Ngày sinh
+            </label>
+            <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   id="dateOfBirth" name="dateOfBirth" type="date" th:field="*{patientDetail.dateOfBirth}"/>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1" for="address">
+                Địa chỉ
+            </label>
+            <textarea
+                    class="w-full border border-gray-300 rounded-md px-4 py-2 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    id="address" name="address" placeholder="Nhập địa chỉ" rows="3" th:field="*{patientDetail.address}"></textarea>
+        </div>
+    </div>
+    <div class="hidden space-y-5" id="doctor-details">
+        <div>
+            <label class="block text-gray-700 font-medium mb-1" for="degree">
+                Bằng cấp
+            </label>
+            <input class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   id="degree" name="degree" placeholder="Nhập bằng cấp" type="text" th:field="*{doctorDetail.degree}"/>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1" for="bio">
+                Tiểu sử
+            </label>
+            <textarea
+                    class="w-full border border-gray-300 rounded-md px-4 py-2 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    id="bio" name="bio" placeholder="Nhập tiểu sử" rows="4" th:field="*{doctorDetail.bio}"></textarea>
+        </div>
+        <div>
+            <label class="block text-gray-700 font-medium mb-1" for="department">
+                Khoa
+            </label>
+            <select class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    id="department" name="department" th:field="*{doctorDetail.department.id}">
+                <option selected="" value="">Chọn khoa</option>
+                <option th:each="dept : ${departments}"
+                        th:value="${dept.id}"
+                        th:text="${dept.name}">
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="hidden text-center text-gray-500 mt-10" id="other-details">
+        <p>
+            Không có thông tin chi tiết cho vai trò này.
+        </p>
+        <img alt="Ảnh động minh họa"
+             class="mx-auto mt-4 rounded-md max-h-48 object-contain"
+             width="400" height="300"
+             src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXEybDU5emEzcG1wNHR4eDNzMGcxbTFtc2Y5ajRpYjc3eWFkd3F0cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Bc4oup2pdP5iKFAYiF/giphy.gif" />
+    </div>
+
+
+</div>

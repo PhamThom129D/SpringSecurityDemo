@@ -74,26 +74,37 @@
         <div th:replace="admin/fragments/footer :: footer"></div>
     </footer>
 
-<script th:src="@{/js/homeAdmin.js}"></script>
+<script th:src="@{/js/admin/homeAdmin.js}"></script>
 <script th:src="@{/js/admin/dataTable.js}"></script>
 <script>
     $(document).ready(function () {
-        $('#userTable tbody').on('click', '.approve-btn, .reject-btn', async function () {
+        $('#userTable tbody').on('click', '.approve-btn', async function () {
             const id = $(this).data('id');
             const action = $(this).data('action');
-            const title = "Xác nhận";
-            const text = action === 'accept' ?
-                'Bạn có chắc chắn muốn duyệt tài khoản này không?' :
-                'Bạn có chắc chắn muốn từ chối tài khoản này không?';
-            const msg = action === 'accept' ? 'Duyệt tài khoản thành công' : 'Từ chối tài khoản thành công';
-            const path = `/manageAccount/approveUser/${action}?id=${id}`;
-            const confirmed = await window.showConfirmation(title, text);
-            if (confirmed) {
-                handleAction(path, msg);
+
+            if (action === 'accept') {
+                const confirmed = await window.showConfirmation("Xác nhận", "Bạn có chắc chắn muốn duyệt tài khoản này không?");
+                if (confirmed) {
+                    window.handleAction(`/manageAccount/approveUser/accept?id=${id}`, "Duyệt tài khoản thành công");
+                }
+            } else if (action === 'reject') {
+                const { value: reason } = await Swal.fire({
+                    title: 'Lý do từ chối',
+                    input: 'textarea',
+                    inputLabel: 'Vui lòng nhập lý do từ chối tài khoản này',
+                    inputPlaceholder: 'Nhập lý do...',
+                    inputAttributes: { 'aria-label': 'Nhập lý do từ chối' },
+                    showCancelButton: true,
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy'
+                });
+
+                if (reason) {
+                    const encodedReason = encodeURIComponent(reason);
+                    window.handleAction(`/manageAccount/approveUser/reject?id=${id}&reason=${encodedReason}`, "Xử lý tài khoản thành công");
+                }
             }
         });
-
-
     });
 
 </script>

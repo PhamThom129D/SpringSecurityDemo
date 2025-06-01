@@ -2,7 +2,6 @@ package com.codegym.hospital.configuration;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.*;
@@ -18,8 +17,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -32,13 +29,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Formatter;
-import java.util.Locale;
 import java.util.Properties;
 
 @Configuration
@@ -48,7 +39,7 @@ import java.util.Properties;
 @EnableJpaRepositories("com.codegym.hospital.repository")
 @EnableSpringDataWebSupport
 @PropertySource("classpath:application.properties")
-public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAware {
+public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
@@ -139,7 +130,7 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("com.codegym.hospital.model");
+        em.setPackagesToScan("com.codegym.hospital");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -177,11 +168,14 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         return new BCryptPasswordEncoder();
     }
 
+
+    @Value("${upload_file}")
+    private String uploadPath;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static/images/");
+                .addResourceLocations("classpath:/static/images/logo/");
         registry
                 .addResourceHandler("/css/**")
                 .addResourceLocations("classpath:/static/css/");
@@ -189,6 +183,15 @@ public class AppConfiguration implements WebMvcConfigurer, ApplicationContextAwa
         registry
                 .addResourceHandler("/js/**")
                 .addResourceLocations("classpath:/static/js/");
+        registry
+                .addResourceHandler("/images/avatar/**")
+                .addResourceLocations("file:" + uploadPath);
+    }
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver getResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setMaxUploadSizePerFile(52428800);
+        return resolver;
     }
 
     @Override

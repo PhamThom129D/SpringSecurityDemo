@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>Title</title>
+</head>
+<body>
+<form action="test" method="POST" enctype="multipart/form-data">
+    <input accept="image/*"  name="avatarFile" type="file"/>
+    <button type="submit">Gửi</button>
+</form>
+
+<!-- Hiển thị ảnh nếu có -->
+<div th:if="${result != null}">
+    <img th:src="@{'/images/avatar/' + ${result}}" alt="Ảnh đã upload" />
+</div>
+</body>
+</html>

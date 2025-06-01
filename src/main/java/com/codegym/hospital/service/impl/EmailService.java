@@ -119,7 +119,7 @@ public class EmailService implements IEmailService {
     }
 
     @Override
-    public void sendRejectNotificationEmail(String email) {
+    public void sendRejectNotificationEmail(String email, String reason) {
         User user = userService.isEmailExist(email);
         String subject = "[HospitalCare] Thông báo từ chối tài khoản";
 
@@ -136,16 +136,20 @@ public class EmailService implements IEmailService {
                 break;
         }
 
+        String loginUrl = "http://localhost:8080/authenticate/login";
+
         String body = "Kính gửi " + roleVN + " " + user.getFullname() + ",\n\n"
-                + "Chúng tôi rất tiếc phải thông báo rằng tài khoản đăng ký của bạn đã **không được phê duyệt** trên hệ thống HospitalCare.\n\n"
-                + "Nguyên nhân có thể do thông tin cung cấp chưa đầy đủ hoặc không đáp ứng yêu cầu của hệ thống.\n"
+                + "Chúng tôi rất tiếc phải thông báo rằng tài khoản đăng ký của bạn đã **KHÔNG ĐƯỢC PHÊ DUYỆT** trên hệ thống HospitalCare.\n\n"
+                + "👉 **Lý do từ chối:** " + reason + "\n\n"
                 + "Vui lòng kiểm tra lại thông tin và đăng ký lại nếu cần thiết, hoặc liên hệ bộ phận hỗ trợ để biết thêm chi tiết.\n\n"
                 + "Nếu đây là sự nhầm lẫn, vui lòng phản hồi email này để chúng tôi xem xét lại yêu cầu của bạn.\n\n"
+                + "🔗 Đăng nhập hoặc đăng ký lại tại: " + loginUrl + "\n\n"
                 + "Trân trọng,\n"
                 + "Đội ngũ HospitalCare";
 
         sendMessageEmailToUser(user.getEmail(), subject, body);
     }
+
 
 
 
