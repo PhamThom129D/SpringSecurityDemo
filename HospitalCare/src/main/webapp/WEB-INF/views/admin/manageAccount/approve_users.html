@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Duyệt tài khoản đăng ký</title>
+    <link th:href="@{/css/homeAdmin.css}" rel="stylesheet">
+    <link th:href="@{/css/dataTable.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script th:src="@{/js/alert.js}"></script>
+
+</head>
+<body class="bg-[#d3e4f5] min-h-screen overflow-y-auto">
+<!-- Include header fragment -->
+<div th:replace="admin/fragments/sidebar :: sidebar"></div>
+<div th:replace="admin/fragments/header :: header"></div>
+
+
+<div class="flex">
+    <!-- Sidebar -->
+
+    <main class="flex-1 p-8 w-[80%] justify-end">
+        <section class="p-4 md:p-6 flex flex-col gap-6 max-w-7xl w-full flex-grow bg-blue-50">
+
+        <table id="userTable" class="display pt-4">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Họ và tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Vai trò</th>
+                <th>Ngày đăng ký</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user,stat : ${users}">
+                <td th:text="${stat.count}"></td>
+                <td th:text="${user.fullname}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.phonenumber}"></td>
+                <td th:text="${user.role.name == 'DOCTOR' ? 'Bác sĩ' : (user.role.name == 'RECEPTIONIST' ? 'Nhân viên tiếp nhận' : user.role.name)}"></td>
+
+                <td th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                <td>
+                    <button class="approve-btn ml-10 mr-6"
+                            th:data-id="${user.id}"
+                            th:data-action="'accept'"
+                            title="Duyệt">
+                    <i class="fas fa-check text-lg text-green-500"></i>
+                    </button>
+                    <button class="approve-btn mr-6"
+                            th:data-id="${user.id}"
+                            th:data-action="'reject'"
+                            title="Từ chối">
+
+                    <i class="fas fa-times text-lg text-red-500"></i>
+                    </button>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    </main>
+</div>
+    <footer class="w-full bg-white shadow mt-auto">
+        <div th:replace="admin/fragments/footer :: footer"></div>
+    </footer>
+
+<script th:src="@{/js/admin/homeAdmin.js}"></script>
+<script th:src="@{/js/admin/dataTable.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#userTable tbody').on('click', '.approve-btn', async function () {
+            const id = $(this).data('id');
+            const action = $(this).data('action');
+
+            if (action === 'accept') {
+                const confirmed = await window.showConfirmation("Xác nhận", "Bạn có chắc chắn muốn duyệt tài khoản này không?");
+                if (confirmed) {
+                    window.handleAction(`/manage-account/approve-user/accept?id=${id}`, "Duyệt tài khoản thành công");
+                }
+            } else if (action === 'reject') {
+                const { value: reason } = await Swal.fire({
+                    title: 'Lý do từ chối',
+                    input: 'textarea',
+                    inputLabel: 'Vui lòng nhập lý do từ chối tài khoản này',
+                    inputPlaceholder: 'Nhập lý do...',
+                    inputAttributes: { 'aria-label': 'Nhập lý do từ chối' },
+                    showCancelButton: true,
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy'
+                });
+
+                if (reason) {
+                    const encodedReason = encodeURIComponent(reason);
+                    window.handleAction(`/manage-account/approve-user/reject?id=${id}&reason=${encodedReason}`, "Xử lý tài khoản thành công");
+                }
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+
+<!-- fragments/header -->
+<header th:fragment="header" class="bg-[#d9e9f8] p-6 shadow-md flex items-center justify-between relative z-30">
+        <button
+                aria-label="Toggle menu"
+                class="text-black text-2xl focus:outline-none md:hidden"
+                id="menuToggle"
+        >
+            <i class="fas fa-bars"></i>
+        </button>
+        <a th:href="@{api/otp/home}" class="text-xl font-bold text-black hidden md:block">Quản lý hệ thống</a>
+        <nav class="flex items-center space-x-6 relative flex-nowrap">
+            <!-- Notifications -->
+            <div class="relative dropdown">
+                <button
+                        aria-label="Thông báo"
+                        class="relative text-black hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-2"
+                        id="notificationBtn"
+                >
+                    <i class="fas fa-bell fa-lg"></i>
+                    <span class="notification-badge" id="notificationCount">5</span>
+                </button>
+                <div
+                        class="dropdown-menu"
+                        id="notificationDropdown"
+                        role="menu"
+                        aria-labelledby="notificationBtn"
+                >
+                    <div
+                            class="p-4 border-b border-gray-200 font-semibold text-gray-700 select-none"
+                    >
+                        Thông báo mới
+                    </div>
+                    <ul>
+                        <li
+                                role="menuitem"
+                                tabindex="0"
+                        >
+                            Bệnh nhân A đã đặt lịch khám
+                        </li>
+                    </ul>
+                    <a href="#" class="view-all" role="button" tabindex="0">Xem tất cả thông báo</a>
+                </div>
+            </div>
+            <!-- Xem trang bác sĩ -->
+            <a
+                    class="text-black font-semibold hover:text-blue-700 transition-colors duration-300 flex items-center gap-2 whitespace-nowrap"
+                    href="#"
+            >
+                <i class="fas fa-user-md"></i>
+                <span class="hidden sm:inline">Xem trang bác sĩ</span>
+            </a>
+            <!-- Thông tin cá nhân Dropdown -->
+            <div class="dropdown relative">
+                <button
+                        aria-label="Thông tin cá nhân"
+                        class="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1"
+                        id="profileBtn"
+                >
+                    <img
+                            alt="Ảnh đại diện"
+                            class="w-10 h-10 rounded-full object-cover border-2 border-blue-600"
+                            height="40"
+                            src="https://storage.googleapis.com/a1aa/image/05e50824-3e5d-4ffa-5bb2-3be77f31496c.jpg"
+                            width="40"
+                    />
+                    <span class="hidden md:inline font-semibold text-black">
+                          <span th:if="${session.loggedInUser != null}" th:text="${session.loggedInUser.fullname}">Admin</span>
+                    </span>
+
+
+                    <i class="fas fa-chevron-down text-gray-600"></i>
+                </button>
+                <div
+                        class="dropdown-menu"
+                        id="profileDropdown"
+                        role="menu"
+                        aria-labelledby="profileBtn"
+                >
+                    <a class="block px-4 py-2 hover:bg-blue-50 text-gray-800 font-medium" href="/account-info/admin-info" role="menuitem"
+                       tabindex="0"
+                    >Thông tin cá nhân</a
+                    >
+                    <a class="block px-4 py-2 hover:bg-blue-50 text-gray-800 font-medium" href="#" role="menuitem"
+                       tabindex="0"
+                    >Đăng xuất</a
+                    >
+                </div>
+            </div>
+        </nav>
+</header>
+
+
+
+
+
+</body>
+</html>
