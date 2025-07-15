@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Access Denied</title>
+</head>
+<body>
+<h2 style="color:red;">Không có quyền truy cập vào trang này!</h2>
+<p>Vui lòng liên hệ quản trị viên nếu bạn nghĩ đây là lỗi.</p>
+
+<div th:if="${role == 'ADMIN'}">
+  <a th:href="@{/admin}">Quay về trang Admin</a>
+</div>
+<div th:if="${role == 'USER'}">
+  <a th:href="@{/user}">Quay về trang Người dùng</a>
+</div>
+<div th:if="${role == null}">
+  <a th:href="@{/login}">Quay về trang đăng nhập</a>
+</div>
+</body>
+</html>

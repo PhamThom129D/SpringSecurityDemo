@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release.set(17)
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework:spring-webmvc:6.1.6'
+    implementation 'org.springframework.security:spring-security-web:6.2.1'
+    implementation 'org.springframework.security:spring-security-config:6.2.1'
+    implementation 'org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
+    // Servlet API
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+}
+
+
+
+
+war {
+    archiveFileName = 'spring-security-demo.war'
+}
